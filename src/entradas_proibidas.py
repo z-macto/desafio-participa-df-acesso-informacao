@@ -1,7 +1,7 @@
 import unicodedata
 
 class EntradasProibidas:
-    def __init__(self, arquivo: str = "dados/palavras_proibidas.txt"):
+    def __init__(self, arquivo: str = "dados/parametros/palavras_proibidas.txt"):
         self.arquivo = arquivo
 
     def _remover_acentos(self, texto: str) -> str:
