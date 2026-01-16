@@ -3,7 +3,7 @@ import csv
 from src.lai_analisador import LaiAnalisador
 
 class Testes:
-    def __init__(self, pasta: str = "teste_em_massa"):
+    def __init__(self, pasta: str = "dados/testes") -> None:
         """
         Inicializa carregando todos os arquivos CSV da pasta indicada.
         Cada linha dos CSV vira uma entrada para teste.
