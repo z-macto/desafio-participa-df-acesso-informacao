@@ -43,7 +43,7 @@ cd desafio-participa-df-acesso-informacao
 3. Executar a aplicação
 
 ```bash
-   python app.py
+   python3 app.py
 ```
 
 4. Acesse no navegador:
