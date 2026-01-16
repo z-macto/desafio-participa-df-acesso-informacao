@@ -4,7 +4,9 @@ from src.entradas_proibidas import EntradasProibidas
 from src.solicitacoes import Solicitacoes
 
 class LaiAnalisador:
-    def __init__(self, copilot_client=None):
+    def __init__(self, 
+                 arquivo_expressoes_juridicas_fixas: str = "dados/parametros/expressoes_juridicas_fixas.txt",
+                 copilot_client=None):
         self.palavras_proibidas = EntradasProibidas().carregar()
         self.copilot_client = copilot_client
         self.palavras_solicitacao = Solicitacoes().carregar()
@@ -14,13 +16,8 @@ class LaiAnalisador:
             "pedido", "requerimento", "solicitacao", "necessidade", "necessito"
         ]
 
-        # Expressões jurídicas fixas
-        self.expressoes_juridicas_fixas = [
-            "nos termos da lei",
-            "com fundamento no artigo",
-            "à luz da legislação",
-            "com base no direito"
-        ]
+        # Expressões jurídicas fixas carregadas de arquivo externo
+        self.expressoes_juridicas_fixas = self._carregar_lista(arquivo_expressoes_juridicas_fixas)
 
         # Expressões jurídicas com verbos conjugáveis
         self.expressoes_juridicas_conjugaveis = {
@@ -45,6 +42,19 @@ class LaiAnalisador:
             if unicodedata.category(c) != 'Mn'
         )
 
+    def _carregar_lista(self, arquivo: str) -> list:
+        """Carrega lista simples de expressões de um arquivo .txt"""
+        lista = []
+        try:
+            with open(arquivo, "r", encoding="utf-8") as f:
+                for linha in f:
+                    linha = linha.strip()
+                    if linha:
+                        lista.append(self._remover_acentos(linha.lower()))
+        except FileNotFoundError:
+            print(f"Arquivo {arquivo} não encontrado.")
+        return lista
+
     def _tokenizar_linha(self, linha: str) -> list:
         linha_normalizada = self._remover_acentos(linha.lower())
         return re.findall(r"\w+", linha_normalizada)
@@ -65,7 +75,7 @@ class LaiAnalisador:
 
     def _gerar_expressoes_juridicas(self) -> list:
         lista = []
-        # Fixas
+        # Fixas carregadas de arquivo
         lista.extend(self.expressoes_juridicas_fixas)
 
         # Conjugáveis
