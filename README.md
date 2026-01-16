@@ -83,3 +83,49 @@ Venho por meio desta solicitar acesso aos documentos do processo.
   ]
 }
 ```
+
+```text
+Venho por meio desta solicitar acesso ao CPF dos servidores.
+```
+
+```bash
+{
+  "Validacao": "Esse pedido solicita acesso a informacoes pessoais.",
+  "Status": "NAO",
+  "Linhas": [
+    {
+      "linha": "Venho por meio desta solicitar acesso ao CPF dos servidores.",
+      "status": "NAO",
+      "motivo": "Solicitação detectada (\"solicitar\") com termo inválido (\"cpf\")",
+      "contexto_juridico": false
+    }
+  ],
+  "Motivo": "Solicitação detectada (\"solicitar\") com termo inválido (\"cpf\")",
+  "Motivo_bloqueou": [
+    {
+      "expressao": "solicitar",
+      "termo_invalido": "cpf",
+      "posicao": 27
+    }
+  ]
+}
+```
+
+```text
+Com fundamento no artigo 5º da Constituição, venho requerer acesso aos documentos.
+```
+
+```bash
+{
+  "Validacao": "Pedido aceitavel !",
+  "Status": "SIM",
+  "Linhas": [
+    {
+      "linha": "Com fundamento no artigo 5º da Constituição, venho requerer acesso aos documentos.",
+      "status": "SIM",
+      "motivo": null,
+      "contexto_juridico": true
+    }
+  ]
+}
+```
