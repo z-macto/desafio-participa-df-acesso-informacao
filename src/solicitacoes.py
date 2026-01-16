@@ -1,37 +1,55 @@
+import unicodedata
+
 class Solicitacoes:
-    def __init__(self):
-        # Verbos regulares base
-        self.verbos_regulares = ["solicitar", "demandar", "reivindicar"]
+    def __init__(self,
+                 arquivo_verbos_regulares: str = "dados/parametros/verbos_regulares.txt",
+                 arquivo_verbos_irregulares: str = "dados/parametros/verbos_irregulares.txt",
+                 arquivo_expressoes_fixas: str = "dados/parametros/expressoes_fixas.txt"):
 
-        # Verbos irregulares com conjugações principais
-        self.verbos_irregulares = {
-            "pedir": ["pedir", "peco", "pede", "pedimos", "pedem", "pedi", "pedirei", "pediria"],
-            "requerer": ["requerer", "requero", "requer", "requeremos", "requerem", "requeri", "requererei"],
-            "querer": ["querer", "quero", "quer", "queremos", "querem", "quis", "queria", "quererei"],
-            "ter": ["ter", "tenho", "tem", "temos", "têm", "tive", "terei", "teria"],
-            "obter": ["obter", "obtenho", "obtem", "obtemos", "obtem", "obtive", "obterei", "obteria"],
-            "precisar": ["precisar", "preciso", "precisa", "precisamos", "precisam", "precisei", "precisarei"]
-        }
-
-        # Expressões fixas
-        self.expressoes_fixas = [
-            "gostaria de acesso", "desejo acesso", "quero acesso",
-            "preciso acesso", "necessito acesso", "necessitamos acesso",
-            "venho por meio desta solicitar", "venho requerer", "faço requerimento",
-            "faço pedido", "faço solicitacao", "encaminho solicitacao",
-            "protocolar solicitacao", "requerimento administrativo",
-            "requerimento oficial", "requerimento judicial",
-            "abrir os documentos", "liberar acesso", "liberar consulta",
-            "liberar visualizacao", "liberar informacoes", "liberar dados"
-        ]
+        # Carregar listas externas
+        self.verbos_regulares = self._carregar_lista(arquivo_verbos_regulares)
+        self.verbos_irregulares = self._carregar_verbos_irregulares(arquivo_verbos_irregulares)
+        self.expressoes_fixas = self._carregar_lista(arquivo_expressoes_fixas)
 
         # Lista final
         self.lista = self._gerar_lista()
 
+    def _remover_acentos(self, texto: str) -> str:
+        return ''.join(
+            c for c in unicodedata.normalize('NFD', texto)
+            if unicodedata.category(c) != 'Mn'
+        )
+
+    def _carregar_lista(self, arquivo: str) -> list:
+        """Carrega lista simples de verbos regulares ou expressões fixas de um arquivo .txt"""
+        lista = []
+        try:
+            with open(arquivo, "r", encoding="utf-8") as f:
+                for linha in f:
+                    linha = linha.strip()
+                    if linha:
+                        lista.append(self._remover_acentos(linha.lower()))
+        except FileNotFoundError:
+            print(f"Arquivo {arquivo} não encontrado.")
+        return lista
+
+    def _carregar_verbos_irregulares(self, arquivo: str) -> dict:
+        """Carrega verbos irregulares e suas conjugações de um arquivo .txt"""
+        verbos = {}
+        try:
+            with open(arquivo, "r", encoding="utf-8") as f:
+                for linha in f:
+                    partes = linha.strip().split(",")
+                    if len(partes) > 1:
+                        verbo = self._remover_acentos(partes[0].lower())
+                        conj = [self._remover_acentos(p.lower()) for p in partes]
+                        verbos[verbo] = conj
+        except FileNotFoundError:
+            print(f"Arquivo {arquivo} não encontrado.")
+        return verbos
+
     def _conjugar_regular(self, verbo: str) -> list:
-        """
-        Gera conjugações simples no presente para verbos regulares.
-        """
+        """Gera conjugações simples no presente para verbos regulares."""
         conj = []
         if verbo.endswith("ar"):
             raiz = verbo[:-2]
@@ -45,12 +63,7 @@ class Solicitacoes:
         return [verbo] + conj
 
     def _gerar_lista(self) -> list:
-        """
-        Gera lista completa de palavras de solicitação:
-        - conjugações de verbos regulares
-        - conjugações de verbos irregulares
-        - expressões fixas
-        """
+        """Gera lista completa de palavras de solicitação"""
         lista = []
         # Verbos regulares
         for verbo in self.verbos_regulares:
@@ -66,7 +79,5 @@ class Solicitacoes:
         return lista
 
     def carregar(self) -> list:
-        """
-        Retorna lista completa de palavras/expressões de solicitação.
-        """
+        """Retorna lista completa de palavras/expressões de solicitação."""
         return self.lista

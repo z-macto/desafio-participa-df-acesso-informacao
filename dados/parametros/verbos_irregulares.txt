@@ -1,0 +1,6 @@
+pedir,pedir,peco,pede,pedimos,pedem,pedi,pedirei,pediria
+requerer,requerer,requero,requer,requeremos,requerem,requeri,requererei
+querer,querer,quero,quer,queremos,querem,quis,queria,quererei
+ter,ter,tenho,tem,temos,têm,tive,terei,teria
+obter,obter,obtenho,obtem,obtemos,obtem,obtive,obterei,obteria
+precisar,precisar,preciso,precisa,precisamos,precisam,precisei,precisarei
