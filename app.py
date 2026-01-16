@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, session
 from src.lai_analisador import LaiAnalisador
-from testes.testes_em_massa import TestesEmMassa  # importa a classe
+from testes.testes import Testes  # importa a classe
 
 app = Flask(__name__)
 app.secret_key = "chave-secreta"  # Necessário para usar sessão
