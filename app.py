@@ -33,7 +33,7 @@ def index():
 # 🚀 Nova rota para página de testes
 @app.route("/testes")
 def testes_em_massa():
-    testes = TestesEmMassa("teste_em_massa")
+    testes = Testes("dados/testes")
     resumo = testes.executar()
     return render_template("testes.html", resumo=resumo)
 
