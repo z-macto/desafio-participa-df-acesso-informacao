@@ -1,0 +1,13 @@
+/venv
+venv/
+__pycache__/
+
+# Ignorar todas as pastas de cache do Python
+__pycache__/
+*/__pycache__/
+**/__pycache__/
+
+# Ignorar arquivos compilados do Python
+*.pyc
+*.pyo
+*.pyd
