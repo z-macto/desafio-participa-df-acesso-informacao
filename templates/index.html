@@ -162,12 +162,12 @@
               `<div class="alert alert-danger mt-2">
                  Preencha o campo da mensagem antes de enviar.
                </div>`;
-          } else if (texto.length < 100) {
+          } else if (texto.length < 50) {
             event.preventDefault();
             document.getElementById("aviso-curto").innerHTML =
               `<div class="alert alert-warning mt-2">
                  A mensagem possui <strong>${texto.length}</strong> caracteres e é muito curta para ser processada.
-                 Digite pelo menos 100 caracteres.
+                 Digite pelo menos 50 caracteres.
                </div>`;
           }
         });
