@@ -10,9 +10,15 @@ def index():
     if "ultimos_pedidos" not in session:
         session["ultimos_pedidos"] = []
 
-    resposta = None
     if request.method == "POST":
-        texto = request.form.get("entrada")
+        texto = request.form.get("entrada", "").strip()
+
+        if not texto:
+            return render_template(
+                "index.html",
+                ultimos_pedidos=session.get("ultimos_pedidos", [])
+            )
+
         analisador = LaiAnalisador()
         resposta = analisador.analisar(texto)
 
@@ -24,9 +30,14 @@ def index():
         })
         session["ultimos_pedidos"] = pedidos[:5]
 
+        return render_template(
+            "index.html",
+            resposta=resposta,
+            ultimos_pedidos=session.get("ultimos_pedidos", [])
+        )
+
     return render_template(
         "index.html",
-        resposta=resposta,
         ultimos_pedidos=session.get("ultimos_pedidos", [])
     )
 
