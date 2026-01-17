@@ -1,0 +1,32 @@
+.sidebar {
+  min-height: 100vh;
+  border-right: 1px solid #ddd;
+  background-color: #f8f9fa;
+}
+
+.sidebar h5 {
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.sidebar ul li {
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-bottom: 5px;
+  color: #fff;
+}
+
+.sidebar ul li:hover {
+  opacity: 0.9;
+}
+
+#contador {
+  font-size: 0.9rem;
+  color: #555;
+}
