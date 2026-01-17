@@ -106,6 +106,25 @@
               >
                 <p><strong>Validação:</strong> {{ resposta.Validacao }}</p>
                 <p><strong>Retorno:</strong> {{ resposta.Retorno }}</p>
+
+                                {% if resposta.Status == 'NAO' and resposta.Motivo %}
+                <hr />
+                <p><strong>Motivo:</strong> {{ resposta.Motivo }}</p>
+
+                {% if resposta.Motivo_bloqueou %}
+                <ul class="mt-2">
+                  {% for item in resposta.Motivo_bloqueou %}
+                    <li>
+                      <span class="badge bg-danger">Expressão</span>
+                      <strong>{{ item.expressao }}</strong>
+                      <span class="badge bg-warning text-dark">Termo inválido</span>
+                      <strong>{{ item.termo_invalido }}</strong>
+                    </li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+                {% endif %}
+                
               </div>
               {% endif %}
             </div>
