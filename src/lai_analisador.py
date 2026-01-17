@@ -1,16 +1,16 @@
 import re
 import unicodedata
-from src.entradas_proibidas import EntradasProibidas
 from src.solicitacoes import Solicitacoes
 
 class LaiAnalisador:
     def __init__(self, 
+                 arquivo_palavras_proibidas: str = "dados/parametros/palavras_proibidas.txt",
                  arquivo_expressoes_juridicas_fixas: str = "dados/parametros/expressoes_juridicas_fixas.txt",
                  arquivo_substantivos_solicitacao: str = "dados/parametros/substantivos_solicitacao.txt",):
         
        
                 
-        self.palavras_proibidas = EntradasProibidas().carregar()
+        self.palavras_proibidas = self._carregar_lista(arquivo_palavras_proibidas)
         self.palavras_solicitacao = Solicitacoes().carregar()
         self.substantivos_solicitacao = self._carregar_lista(arquivo_substantivos_solicitacao)
         self.expressoes_juridicas_fixas = self._carregar_lista(arquivo_expressoes_juridicas_fixas)
