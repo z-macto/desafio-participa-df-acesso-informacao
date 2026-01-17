@@ -6,17 +6,13 @@ from src.solicitacoes import Solicitacoes
 class LaiAnalisador:
     def __init__(self, 
                  arquivo_expressoes_juridicas_fixas: str = "dados/parametros/expressoes_juridicas_fixas.txt",
-                 copilot_client=None):
+                 arquivo_substantivos_solicitacao: str = "dados/parametros/substantivos_solicitacao.txt",):
+        
+       
+                
         self.palavras_proibidas = EntradasProibidas().carregar()
-        self.copilot_client = copilot_client
         self.palavras_solicitacao = Solicitacoes().carregar()
-
-        # Substantivos que indicam solicitação
-        self.substantivos_solicitacao = [
-            "pedido", "requerimento", "solicitacao", "necessidade", "necessito"
-        ]
-
-        # Expressões jurídicas fixas carregadas de arquivo externo
+        self.substantivos_solicitacao = self._carregar_lista(arquivo_substantivos_solicitacao)
         self.expressoes_juridicas_fixas = self._carregar_lista(arquivo_expressoes_juridicas_fixas)
 
         # Expressões jurídicas com verbos conjugáveis
