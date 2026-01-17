@@ -3,7 +3,7 @@ from src.lai_analisador import LaiAnalisador
 from testes.testes import Testes  # importa a classe
 
 app = Flask(__name__)
-app.secret_key = "chave-secreta"  # Necessário para usar sessão
+app.secret_key = "{DESAFIO-PARTICIPA-DF-ACESSO-INFORMACAO}" 
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -30,7 +30,6 @@ def index():
         ultimos_pedidos=session.get("ultimos_pedidos", [])
     )
 
-# 🚀 Nova rota para página de testes
 @app.route("/testes")
 def testes_em_massa():
     testes = Testes("dados/testes")
