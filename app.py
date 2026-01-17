@@ -2,7 +2,12 @@ from flask import Flask, render_template, request, session
 from src.lai_analisador import LaiAnalisador
 from testes.testes import Testes  # importa a classe
 
-app = Flask(__name__)
+app = Flask( 
+        __name__, 
+        template_folder="web/templates",
+        static_folder="web/static" 
+)
+            
 app.secret_key = "{DESAFIO-PARTICIPA-DF-ACESSO-INFORMACAO}" 
 
 @app.route("/", methods=["GET", "POST"])
