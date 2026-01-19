@@ -6,6 +6,8 @@ cnh
 cnhs
 titulo de eleitor
 titulos de eleitor
+titulo eleitoral
+titulos eleitorais
 reservista
 reservistas
 carteira de trabalho
@@ -22,6 +24,7 @@ celular
 celulares
 whatsapp
 whatsapps
+zap
 email
 emails
 e-mail
@@ -34,22 +37,18 @@ identidade
 identidades
 cnpj
 cnpjs
-CPF
-RG
-CNH
-Passaporte
-Nome Completo de cidadão
-E-mail pessoal
-Telefone celular
-Endereço residencial
-Prontuários
-Laudos Médicos
-Atestados
+passaporte
+nome completo de cidadão
+e-mail pessoal
+endereço residencial
+prontuários
+laudos médicos
+atestados
 CID
-Lista de Medicamentos
-Origem racial
+lista de medicamentos
+origem racial
 convicção religiosa
 opinião política
-Filiação partidária
-Filiação sindical
+filiação partidária
+filiação sindical
 religião declarada em censos internos

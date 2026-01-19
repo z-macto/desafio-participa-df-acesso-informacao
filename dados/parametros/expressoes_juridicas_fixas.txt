@@ -24,3 +24,84 @@ de acordo com a lei
 de acordo com a legislação
 de acordo com o direito
 de acordo com a constituição
+data venia
+vossa senhoria
+vossa excelencia
+vossa magnificencia
+ilustrissimo
+excelentissimo
+senhor doutor
+senhora doutora
+meritissimo
+impetrante
+impetrado
+requerente
+requerido
+outorgante
+outorgado
+fiel depositario
+reclamante
+reclamado
+autor da acao
+reu
+litisconsorte
+assistente de acusacao
+testemunha arrolada
+perito judicial
+habeas corpus
+mandado de seguranca
+agravo de instrumento
+embargos de declaracao
+recurso inominado
+apelacao civel
+apelacao criminal
+peticao inicial
+contestacao
+replica
+tréplica
+alegacoes finais
+sentenca judicial
+acordao
+liminar
+tutela antecipada
+medida cautelar
+ato administrativo
+processo disciplinar
+sindicancia
+inquerito administrativo
+tomada de contas especial
+parecer juridico
+nota tecnica
+despacho decisorio
+portaria de nomeacao
+portaria de exoneracao
+termo de posse
+edital de convocacao
+homologacao de resultado
+adjudicacao
+licenca ambiental
+alvara de funcionamento
+habite-se
+certidao negativa de debitos
+certidao positiva com efeito de negativa
+transito em julgado
+fumus boni iuris
+periculum in mora
+ex tunc
+ex nunc
+erga omnes
+in dubio pro reo
+pacta sunt servanda
+res judicata
+vacatio legis
+propter rem
+vinculo estatutario
+regime juridico unico
+servidor efetivo
+cargo em comissao
+funcao de confianca
+estagio probatorio
+cedencia de servidor
+redistribuicao
+remocao a pedido
+ex officio
