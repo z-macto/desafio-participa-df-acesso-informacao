@@ -20,3 +20,7 @@ liberar consulta
 liberar visualizacao
 liberar informacoes
 liberar dados
+solicito copia
+solicito integra
+solicito relatorio
+solicito listagem

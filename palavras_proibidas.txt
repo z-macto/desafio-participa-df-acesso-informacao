@@ -38,11 +38,15 @@ identidades
 cnpj
 cnpjs
 passaporte
+conta corrente
+conta bancaria
 nome completo de cidadão
 e-mail pessoal
 endereço residencial
 prontuários
+laudo medico
 laudos médicos
+atestado
 atestados
 CID
 lista de medicamentos
