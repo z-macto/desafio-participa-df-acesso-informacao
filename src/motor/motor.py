@@ -1,8 +1,10 @@
 import re
 import unicodedata
-from src.solicitacoes import Solicitacoes
 
-class LaiAnalisador:
+from motor.juridico import expressoes_juridicas
+from motor.solicitacoes import Solicitacoes
+
+class Motor:
     def __init__(self, 
                  arquivo_palavras_proibidas: str = "dados/parametros/palavras_proibidas.txt",
                  arquivo_expressoes_juridicas_fixas: str = "dados/parametros/expressoes_juridicas_fixas.txt",
@@ -16,84 +18,11 @@ class LaiAnalisador:
         self.expressoes_juridicas_fixas = self._carregar_lista(arquivo_expressoes_juridicas_fixas)
 
         # Expressões jurídicas com verbos conjugáveis
-        self.expressoes_juridicas_conjugaveis = {
-            "requerer": [
-                "venho por meio desta {verbo}",
-                "requer-se",
-                "requerimento administrativo",
-                "requerimento judicial"
-            ],
-            "fazer": [
-                "faço requerimento",
-                "faço pedido"
-            ]
-        }
+        self.expressoes_juridicas_conjugaveis = expressoes_juridicas()
 
         # Lista final expandida
         self.expressoes_juridicas = self._gerar_expressoes_juridicas()
 
-    def _remover_acentos(self, texto: str) -> str:
-        return ''.join(
-            c for c in unicodedata.normalize('NFD', texto)
-            if unicodedata.category(c) != 'Mn'
-        )
-
-    def _carregar_lista(self, arquivo: str) -> list:
-        """Carrega lista simples de expressões de um arquivo .txt"""
-        lista = []
-        try:
-            with open(arquivo, "r", encoding="utf-8") as f:
-                for linha in f:
-                    linha = linha.strip()
-                    if linha:
-                        lista.append(self._remover_acentos(linha.lower()))
-        except FileNotFoundError:
-            print(f"Arquivo {arquivo} não encontrado.")
-        return lista
-
-    def _tokenizar_linha(self, linha: str) -> list:
-        linha_normalizada = self._remover_acentos(linha.lower())
-        return re.findall(r"\w+", linha_normalizada)
-
-    def _conjugar_verbo(self, verbo: str) -> list:
-        """Conjugações simples no presente para verbos regulares."""
-        conj = []
-        if verbo.endswith("ar"):
-            raiz = verbo[:-2]
-            conj = [raiz + "o", raiz + "a", raiz + "amos", raiz + "am"]
-        elif verbo.endswith("er"):
-            raiz = verbo[:-2]
-            conj = [raiz + "o", raiz + "e", raiz + "emos", raiz + "em"]
-        elif verbo.endswith("ir"):
-            raiz = verbo[:-2]
-            conj = [raiz + "o", raiz + "e", raiz + "imos", raiz + "em"]
-        return [verbo] + conj
-
-    def _gerar_expressoes_juridicas(self) -> list:
-        lista = []
-        # Fixas carregadas de arquivo
-        lista.extend(self.expressoes_juridicas_fixas)
-
-        # Conjugáveis
-        for verbo, moldes in self.expressoes_juridicas_conjugaveis.items():
-            conj = self._conjugar_verbo(verbo)
-            for molde in moldes:
-                for forma in conj:
-                    lista.append(molde.replace("{verbo}", forma))
-
-        return lista
-
-    def _detectar_contexto_juridico(self, linha_normalizada: str) -> str | None:
-        for exp in self.expressoes_juridicas:
-            if exp in linha_normalizada:
-                return exp
-        return None
-
-    def _detectar_substantivo_solicitacao(self, linha_normalizada: str) -> str | None:
-        for s in self.substantivos_solicitacao:
-            if s in linha_normalizada:
-                return s
-        return None
 
     def analisar(self, texto: str) -> dict:
         linhas = texto.splitlines()

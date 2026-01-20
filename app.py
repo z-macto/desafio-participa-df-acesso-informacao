@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, session
-from src.lai_analisador import LaiAnalisador
+from motor.motor import Motor
 from testes.testes import Testes  # importa a classe
+from src.backend.rotas.index_routes import index_bp
+from src.backend.rotas.teste_routes import teste_bp
 
 app = Flask( 
         __name__, 
@@ -10,47 +12,10 @@ app = Flask(
             
 app.secret_key = "{DESAFIO-PARTICIPA-DF-ACESSO-INFORMACAO}" 
 
-@app.route("/", methods=["GET", "POST"])
-def index():
-    if "ultimos_pedidos" not in session:
-        session["ultimos_pedidos"] = []
+app.register_blueprint(index_bp)
+app.register_blueprint(teste_bp)
 
-    if request.method == "POST":
-        texto = request.form.get("entrada", "").strip()
 
-        if not texto:
-            return render_template(
-                "index.html",
-                ultimos_pedidos=session.get("ultimos_pedidos", [])
-            )
-
-        analisador = LaiAnalisador()
-        resposta = analisador.analisar(texto)
-
-        # adiciona pedido com status
-        pedidos = session["ultimos_pedidos"]
-        pedidos.insert(0, {
-            "texto": texto,
-            "status": resposta.get("Status", "NAO")
-        })
-        session["ultimos_pedidos"] = pedidos[:5]
-
-        return render_template(
-            "index.html",
-            resposta=resposta,
-            ultimos_pedidos=session.get("ultimos_pedidos", [])
-        )
-
-    return render_template(
-        "index.html",
-        ultimos_pedidos=session.get("ultimos_pedidos", [])
-    )
-
-@app.route("/testes")
-def testes_em_massa():
-    testes = Testes("dados/testes")
-    resumo = testes.executar()
-    return render_template("testes.html", resumo=resumo)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

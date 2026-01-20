@@ -1,6 +1,6 @@
 import os
 import csv
-from src.lai_analisador import LaiAnalisador
+from motor.motor import Motor
 
 class Testes:
     def __init__(self, pasta: str = "dados/testes") -> None:
@@ -9,9 +9,12 @@ class Testes:
         Cada linha dos CSV vira uma entrada para teste.
         """
         # caminho absoluto relativo ao app.py
-        self.pasta = os.path.join(os.path.dirname(os.path.dirname(__file__)), pasta)
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        self.pasta = os.path.join(base_dir, "..", pasta)
+        self.pasta = os.path.abspath(self.pasta)
+
         self.entradas = self._carregar_csvs()
-        self.analisador = LaiAnalisador()
+        self.analisador = Motor()
 
     def _carregar_csvs(self) -> list[str]:
         """
