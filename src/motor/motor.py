@@ -1,5 +1,6 @@
 import re
 import unicodedata
+import json
 
 from motor.juridico import MotorJuridico
 from motor.nominal import detectar_substantivo_solicitacao
@@ -8,26 +9,27 @@ from motor.texto import carregar_lista, remover_acentos, tokenizar_linha
 
 
 class Motor:
-    def __init__(self, 
+    def __init__(self,
                  arquivo_palavras_proibidas: str = "dados/parametros/palavras_proibidas.txt",
                  arquivo_expressoes_juridicas_fixas: str = "dados/parametros/expressoes_juridicas_fixas.txt",
-                 arquivo_substantivos_solicitacao: str = "dados/parametros/substantivos_solicitacao.txt",):
-        
-       
+                 arquivo_substantivos_solicitacao: str = "dados/parametros/substantivos_solicitacao.txt", ):
+
+        # Instância do motor jurídico
         self.juridico = MotorJuridico()
 
+        # Carregamento de listas externas
         self.palavras_proibidas = carregar_lista(arquivo_palavras_proibidas)
         self.palavras_solicitacao = Solicitacoes().carregar()
         self.substantivos_solicitacao = carregar_lista(arquivo_substantivos_solicitacao)
         self.expressoes_juridicas_fixas = carregar_lista(arquivo_expressoes_juridicas_fixas)
 
         # Expressões jurídicas com verbos conjugáveis
-        self.expressoes_juridicas_conjugaveis =  self.juridico.obter_expressoes_uridcas()
+        self.expressoes_juridicas_conjugaveis = self.juridico.obter_expressoes_juridicas()
 
-        self.expressoes_juridicas =  self.juridico.gerar_expressoes_juridicas()
+        # Lista completa de expressões jurídicas
+        self.expressoes_juridicas = self.juridico.gerar_expressoes_juridicas()
 
-
-    def analisar(self, texto: str) -> dict:
+    def analisar(self, texto: str) -> str:
         linhas = texto.splitlines()
         resultado_linhas = []
         invalido = False
@@ -46,10 +48,12 @@ class Motor:
                     break
 
             # Detecta substantivo de solicitação
-            substantivo_solicitacao = detectar_substantivo_solicitacao(self.substantivos_solicitacao,linha_normalizada)
+            substantivo_solicitacao = detectar_substantivo_solicitacao(
+                self.substantivos_solicitacao, linha_normalizada
+            )
 
             # Detecta contexto jurídico
-            expressao_juridica =  self.juridico.detectar_contexto_juridico(linha_normalizada)
+            expressao_juridica = self.juridico.detectar_contexto_juridico(linha_normalizada)
 
             # Detecta termo proibido (só se houver solicitação ou contexto jurídico)
             termo_invalido = None
@@ -61,11 +65,16 @@ class Motor:
 
             if (expressao_solicitacao or substantivo_solicitacao or expressao_juridica) and termo_invalido:
                 invalido = True
-                motivo = f'Solicitação detectada ("{expressao_solicitacao or substantivo_solicitacao or expressao_juridica}") com termo inválido ("{termo_invalido}")'
+                motivo = (
+                    f'Solicitação detectada ("{expressao_solicitacao or substantivo_solicitacao or expressao_juridica}") '
+                    f'com termo inválido ("{termo_invalido}")'
+                )
                 motivo_bloqueou.append({
                     "expressao": expressao_solicitacao or substantivo_solicitacao or expressao_juridica,
                     "termo_invalido": termo_invalido,
-                    "posicao": linha_normalizada.find(expressao_solicitacao or substantivo_solicitacao or expressao_juridica)
+                    "posicao": linha_normalizada.find(
+                        expressao_solicitacao or substantivo_solicitacao or expressao_juridica
+                    )
                 })
                 resultado_linhas.append({
                     "linha": linha.strip(),
@@ -89,7 +98,7 @@ class Motor:
             validacao = "Pedido aceitavel !"
             status = "SIM"
 
-        return {
+        resultado = {
             "Validacao": validacao,
             "Retorno": texto,
             "Status": status,
@@ -97,3 +106,6 @@ class Motor:
             "Motivo": motivo,
             "Motivo_bloqueou": motivo_bloqueou
         }
+
+        # 🔑 Retorna como JSON
+        return json.dumps(resultado, ensure_ascii=False, indent=2)

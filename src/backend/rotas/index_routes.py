@@ -1,3 +1,4 @@
+import json
 from flask import Blueprint, render_template, request, session
 from motor.motor import Motor
 
@@ -19,7 +20,8 @@ def index():
             )
 
         analisador = Motor()
-        resposta = analisador.analisar(texto)
+        resposta_json = analisador.analisar(texto)   # retorna string JSON
+        resposta = json.loads(resposta_json)         # converte para dict
 
         pedidos = session["ultimos_pedidos"]
         pedidos.insert(0, {

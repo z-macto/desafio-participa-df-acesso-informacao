@@ -1,5 +1,6 @@
 import os
 import csv
+import json
 from motor.motor import Motor
 
 class Testes:
@@ -37,7 +38,7 @@ class Testes:
 
     def executar(self) -> dict:
         """
-        Executa os testes em massa chamando LaiAnalisador.analisar para cada entrada.
+        Executa os testes em massa chamando Motor.analisar para cada entrada.
         Retorna um resumo com quantos passaram e quantos foram inválidos,
         além dos resultados individuais.
         """
@@ -46,7 +47,8 @@ class Testes:
         total_nao = 0
 
         for texto in self.entradas:
-            resultado = self.analisador.analisar(texto)
+            resultado_json = self.analisador.analisar(texto)   # retorna string JSON
+            resultado = json.loads(resultado_json)             # converte para dict
             resultados.append(resultado)
 
             if resultado["Status"] == "SIM":

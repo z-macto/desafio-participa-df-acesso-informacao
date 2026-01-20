@@ -8,7 +8,7 @@ class MotorJuridico:
         self.expressoes_juridicas_conjugaveis: dict[str, list[str]] = self.expressoes_juridicas()
         self.expressoes_juridicas: list[str] = self.gerar_expressoes_juridicas()
 
-    def obter_expressoes_uridcas(self):
+    def obter_expressoes_juridicas(self):
         return self.expressoes_juridicas
 
     def gerar_expressoes_juridicas(self) -> list:
