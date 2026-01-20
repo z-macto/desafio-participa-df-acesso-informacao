@@ -10,7 +10,7 @@ class Motor:
     def __init__(self,
                  arquivo_palavras_proibidas: str = "dados/parametros/palavras_proibidas.txt",
                  arquivo_expressoes_juridicas_fixas: str = "dados/parametros/expressoes_juridicas_fixas.txt",
-                 arquivo_substantivos_solicitacao: str = "dados/parametros/substantivos_solicitacao.txt", ):
+                 arquivo_substantivos_solicitacao: str = "dados/parametros/substantivos_solicitacao.txt"):
 
         # Instância do motor jurídico
         self.juridico = MotorJuridico()
@@ -41,90 +41,83 @@ class Motor:
         questionamento_solicitacao_linhas = 0
         questionamento_total_linhas = 0
 
-
         for linha in linhas:
             tokens = tokenizar_linha(linha)
             linha_normalizada = remover_acentos(linha.lower())
 
-            tem_termo_proibido = False
+            termos_proibidos_encontrados = []
+            verbos_solicitacao_encontrados = []
             tem_solicitacao = False
+            tem_termo_proibido = False
+            tem_contexto_juridico = False
 
-            # Detecta solicitação (verbo)
-            expressao_solicitacao = None
+            # Detecta verbos de solicitação
             for p in self.palavras_solicitacao:
-                if p in linha_normalizada:
-                    expressao_solicitacao = p
-                    tem_solicitacao=True
-                    break
+                if p in tokens:
+                    verbos_solicitacao_encontrados.append(p)
+                    tem_solicitacao = True
 
             # Detecta substantivo de solicitação
             substantivo_solicitacao = detectar_substantivo_solicitacao(
                 self.substantivos_solicitacao, linha_normalizada
             )
-
             if substantivo_solicitacao:
+                verbos_solicitacao_encontrados.append(substantivo_solicitacao)
                 tem_solicitacao = True
 
             # Detecta contexto jurídico
             expressao_juridica = self.juridico.detectar_contexto_juridico(linha_normalizada)
+            if expressao_juridica:
+                tem_contexto_juridico = True
 
-            # Detecta termo proibido (só se houver solicitação ou contexto jurídico)
-            termo_invalido = None
-            termo_invalido_primeiro = None
-
-            if expressao_solicitacao or substantivo_solicitacao or expressao_juridica:
-                for token in tokens:
-                    if token in self.palavras_proibidas:
-                        if termo_invalido is None:
-                            termo_invalido_primeiro = token
-                        termo_invalido = token
-                        #break
-
-
-
+            # Detecta termos proibidos
             for token in tokens:
                 if token in self.palavras_proibidas:
+                    termos_proibidos_encontrados.append(token)
                     tem_termo_proibido = True
-                    criticidade_palavras_proibidas+=1
+                    criticidade_palavras_proibidas += 1
 
             if tem_termo_proibido:
-                criticidade_linhas_pessoal+=1
+                criticidade_linhas_pessoal += 1
 
-            if (expressao_solicitacao or substantivo_solicitacao or expressao_juridica) and termo_invalido_primeiro:
+            # Define status e motivo
+            if tem_solicitacao and tem_termo_proibido:
                 invalido = True
-                criticidade_verbos_solicitacao+=1
-                tem_solicitacao=True
+                criticidade_verbos_solicitacao += 1
                 motivo = (
-                    f'Solicitação detectada ("{expressao_solicitacao or substantivo_solicitacao or expressao_juridica}") '
-                    f'com termo inválido ("{termo_invalido}")'
+                    f'Solicitação detectada com termos proibidos: {", ".join(termos_proibidos_encontrados)}'
                 )
                 motivo_bloqueou.append({
-                    "expressao": expressao_solicitacao or substantivo_solicitacao or expressao_juridica,
-                    "termo_invalido": termo_invalido,
+                    "expressao": verbos_solicitacao_encontrados or expressao_juridica,
+                    "termo_invalido": termos_proibidos_encontrados,
                     "posicao": linha_normalizada.find(
-                        expressao_solicitacao or substantivo_solicitacao or expressao_juridica
+                        verbos_solicitacao_encontrados[0] if verbos_solicitacao_encontrados else ""
                     )
                 })
-                resultado_linhas.append({
-                    "linha": linha.strip(),
-                    "status": "NAO",
-                    "motivo": motivo,
-                    "contexto_juridico": bool(expressao_juridica)
-                })
-                #break
+                status_linha = "NAO"
+                motivo_linha = motivo
             else:
-                resultado_linhas.append({
-                    "linha": linha.strip(),
-                    "status": "SIM",
-                    "motivo": None,
-                    "contexto_juridico": bool(expressao_juridica)
-                })
+                status_linha = "SIM"
+                motivo_linha = None
+
+            # Adiciona ao resultado
+            resultado_linhas.append({
+                "linha": linha.strip(),
+                "status": status_linha,
+                "motivo": motivo_linha,
+                "contexto_juridico": tem_contexto_juridico,
+                "tem_solicitacao": tem_solicitacao,
+                "tem_termo_proibido": tem_termo_proibido,
+                "termos_proibidos": termos_proibidos_encontrados,
+                "solicitacao": verbos_solicitacao_encontrados
+            })
 
             if tem_solicitacao:
-                questionamento_solicitacao_linhas+=1
+                questionamento_solicitacao_linhas += 1
 
-            questionamento_total_linhas+=1
+            questionamento_total_linhas += 1
 
+        # Validação geral
         if invalido:
             validacao = "Esse pedido solicita acesso a informacoes pessoais."
             status = "NAO"
@@ -132,17 +125,19 @@ class Motor:
             validacao = "Pedido aceitavel !"
             status = "SIM"
 
-        criticidade = criticidade_linhas_pessoal  * criticidade_verbos_solicitacao * criticidade_palavras_proibidas
-        questionamento = questionamento_solicitacao_linhas / questionamento_total_linhas
-        pessoalidade = criticidade_palavras_proibidas / questionamento_total_linhas
-        impessoalidade = 1-pessoalidade
-
-        indice_final = 0
-
-        if criticidade>0:
-            indice_final = (criticidade*(questionamento+1)*(pessoalidade+1))
+        # Cálculos finais
+        if questionamento_total_linhas > 0:
+            criticidade = criticidade_linhas_pessoal * criticidade_verbos_solicitacao * criticidade_palavras_proibidas
+            questionamento = questionamento_solicitacao_linhas / questionamento_total_linhas
+            pessoalidade = criticidade_palavras_proibidas / questionamento_total_linhas
         else:
-            indice_final = 0-(criticidade*(questionamento+1)*(pessoalidade+1))
+            criticidade = 0
+            questionamento = 0
+            pessoalidade = 0
+
+        impessoalidade = 1 - pessoalidade
+
+        indice_final = criticidade * (questionamento + 1) * (pessoalidade + 1)
 
         criticidade = round(criticidade, 2)
         questionamento = round(questionamento, 2)
@@ -152,10 +147,10 @@ class Motor:
 
         resultado = {
             "Indice": indice_final,
-            "Criticidade":criticidade,
-            "Questionamento":questionamento,
+            "Criticidade": criticidade,
+            "Questionamento": questionamento,
             "Pessoalidade": pessoalidade,
-            "Impessoalidade":impessoalidade,
+            "Impessoalidade": impessoalidade,
             "Validacao": validacao,
             "Retorno": texto,
             "Status": status,
@@ -165,5 +160,4 @@ class Motor:
         }
 
         print(resultado)
-
         return resultado
