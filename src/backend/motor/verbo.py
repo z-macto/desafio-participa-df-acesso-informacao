@@ -1,4 +1,4 @@
-from motor.texto import remover_acentos
+from backend.motor.texto import remover_acentos
 
 
 def conjugar_verbo( verbo: str) -> list:

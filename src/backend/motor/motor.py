@@ -1,11 +1,9 @@
-import re
-import unicodedata
 import json
 
-from motor.juridico import MotorJuridico
-from motor.nominal import detectar_substantivo_solicitacao
-from motor.solicitacoes import Solicitacoes
-from motor.texto import carregar_lista, remover_acentos, tokenizar_linha
+from backend.motor.juridico import MotorJuridico
+from backend.motor.nominal import detectar_substantivo_solicitacao
+from backend.motor.solicitacoes import Solicitacoes
+from backend.motor.texto import carregar_lista, remover_acentos, tokenizar_linha
 
 
 class Motor:
@@ -29,8 +27,8 @@ class Motor:
         # Lista completa de expressões jurídicas
         self.expressoes_juridicas = self.juridico.gerar_expressoes_juridicas()
 
-    def analisar(self, texto: str) -> str:
-        linhas = texto.splitlines()
+    def analisar(self, texto: str) -> dict:
+        linhas = texto.split(".")
         resultado_linhas = []
         invalido = False
         motivo = None
@@ -107,5 +105,6 @@ class Motor:
             "Motivo_bloqueou": motivo_bloqueou
         }
 
-        # 🔑 Retorna como JSON
-        return json.dumps(resultado, ensure_ascii=False, indent=2)
+        print(resultado)
+
+        return resultado

@@ -1,42 +1,21 @@
-import json
 from flask import Blueprint, render_template, request, session
-from motor.motor import Motor
+from src.api.microsservico import consultar_resposta, consultar_testes
 
-# cria blueprint
 index_bp = Blueprint("index", __name__)
 
 @index_bp.route("/", methods=["GET", "POST"])
 def index():
-    if "ultimos_pedidos" not in session:
-        session["ultimos_pedidos"] = []
-
+    resposta = None
     if request.method == "POST":
         texto = request.form.get("entrada", "").strip()
+        if texto:
+            resposta = consultar_resposta(texto)  # retorna dict
 
-        if not texto:
-            return render_template(
-                "index.html",
-                ultimos_pedidos=session.get("ultimos_pedidos", [])
-            )
-
-        analisador = Motor()
-        resposta_json = analisador.analisar(texto)   # retorna string JSON
-        resposta = json.loads(resposta_json)         # converte para dict
-
-        pedidos = session["ultimos_pedidos"]
-        pedidos.insert(0, {
-            "texto": texto,
-            "status": resposta.get("Status", "NAO")
-        })
-        session["ultimos_pedidos"] = pedidos[:5]
-
-        return render_template(
-            "index.html",
-            resposta=resposta,
-            ultimos_pedidos=session.get("ultimos_pedidos", [])
-        )
+    resumo = consultar_testes("dados/testes")
 
     return render_template(
         "index.html",
-        ultimos_pedidos=session.get("ultimos_pedidos", [])
+        resposta=resposta,
+        ultimos_pedidos=session.get("ultimos_pedidos", []),
+        resumo=resumo
     )

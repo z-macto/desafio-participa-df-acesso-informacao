@@ -1,6 +1,4 @@
-from flask import Flask, render_template, request, session
-from motor.motor import Motor
-from testes.testes import Testes  # importa a classe
+from flask import Flask
 from src.backend.rotas.index_routes import index_bp
 from src.backend.rotas.teste_routes import teste_bp
 
