@@ -34,15 +34,27 @@ class Motor:
         motivo = None
         motivo_bloqueou = []
 
+        criticidade_linhas_pessoal = 0
+        criticidade_verbos_solicitacao = 0
+        criticidade_palavras_proibidas = 0
+
+        questionamento_solicitacao_linhas = 0
+        questionamento_total_linhas = 0
+
+
         for linha in linhas:
             tokens = tokenizar_linha(linha)
             linha_normalizada = remover_acentos(linha.lower())
+
+            tem_termo_proibido = False
+            tem_solicitacao = False
 
             # Detecta solicitação (verbo)
             expressao_solicitacao = None
             for p in self.palavras_solicitacao:
                 if p in linha_normalizada:
                     expressao_solicitacao = p
+                    tem_solicitacao=True
                     break
 
             # Detecta substantivo de solicitação
@@ -50,19 +62,38 @@ class Motor:
                 self.substantivos_solicitacao, linha_normalizada
             )
 
+            if substantivo_solicitacao:
+                tem_solicitacao = True
+
             # Detecta contexto jurídico
             expressao_juridica = self.juridico.detectar_contexto_juridico(linha_normalizada)
 
             # Detecta termo proibido (só se houver solicitação ou contexto jurídico)
             termo_invalido = None
+            termo_invalido_primeiro = None
+
             if expressao_solicitacao or substantivo_solicitacao or expressao_juridica:
                 for token in tokens:
                     if token in self.palavras_proibidas:
+                        if termo_invalido is None:
+                            termo_invalido_primeiro = token
                         termo_invalido = token
-                        break
+                        #break
 
-            if (expressao_solicitacao or substantivo_solicitacao or expressao_juridica) and termo_invalido:
+
+
+            for token in tokens:
+                if token in self.palavras_proibidas:
+                    tem_termo_proibido = True
+                    criticidade_palavras_proibidas+=1
+
+            if tem_termo_proibido:
+                criticidade_linhas_pessoal+=1
+
+            if (expressao_solicitacao or substantivo_solicitacao or expressao_juridica) and termo_invalido_primeiro:
                 invalido = True
+                criticidade_verbos_solicitacao+=1
+                tem_solicitacao=True
                 motivo = (
                     f'Solicitação detectada ("{expressao_solicitacao or substantivo_solicitacao or expressao_juridica}") '
                     f'com termo inválido ("{termo_invalido}")'
@@ -80,7 +111,7 @@ class Motor:
                     "motivo": motivo,
                     "contexto_juridico": bool(expressao_juridica)
                 })
-                break
+                #break
             else:
                 resultado_linhas.append({
                     "linha": linha.strip(),
@@ -89,6 +120,11 @@ class Motor:
                     "contexto_juridico": bool(expressao_juridica)
                 })
 
+            if tem_solicitacao:
+                questionamento_solicitacao_linhas+=1
+
+            questionamento_total_linhas+=1
+
         if invalido:
             validacao = "Esse pedido solicita acesso a informacoes pessoais."
             status = "NAO"
@@ -96,7 +132,30 @@ class Motor:
             validacao = "Pedido aceitavel !"
             status = "SIM"
 
+        criticidade = criticidade_linhas_pessoal  * criticidade_verbos_solicitacao * criticidade_palavras_proibidas
+        questionamento = questionamento_solicitacao_linhas / questionamento_total_linhas
+        pessoalidade = criticidade_palavras_proibidas / questionamento_total_linhas
+        impessoalidade = 1-pessoalidade
+
+        indice_final = 0
+
+        if criticidade>0:
+            indice_final = (criticidade*(questionamento+1)*(pessoalidade+1))
+        else:
+            indice_final = 0-(criticidade*(questionamento+1)*(pessoalidade+1))
+
+        criticidade = round(criticidade, 2)
+        questionamento = round(questionamento, 2)
+        pessoalidade = round(pessoalidade, 2)
+        impessoalidade = round(impessoalidade, 2)
+        indice_final = round(indice_final, 2)
+
         resultado = {
+            "Indice": indice_final,
+            "Criticidade":criticidade,
+            "Questionamento":questionamento,
+            "Pessoalidade": pessoalidade,
+            "Impessoalidade":impessoalidade,
             "Validacao": validacao,
             "Retorno": texto,
             "Status": status,
