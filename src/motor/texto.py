@@ -1,14 +1,15 @@
+import re
 import unicodedata
 
 
-def _remover_acentos(self, texto: str) -> str:
+def remover_acentos( texto: str) -> str:
     return ''.join(
         c for c in unicodedata.normalize('NFD', texto)
         if unicodedata.category(c) != 'Mn'
     )
 
 
-def _carregar_lista(self, arquivo: str) -> list:
+def carregar_lista( arquivo: str) -> list:
     """Carrega lista simples de expressões de um arquivo .txt"""
     lista = []
     try:
@@ -16,11 +17,11 @@ def _carregar_lista(self, arquivo: str) -> list:
             for linha in f:
                 linha = linha.strip()
                 if linha:
-                    lista.append(self._remover_acentos(linha.lower()))
+                    lista.append(remover_acentos(linha.lower()))
     except FileNotFoundError:
         print(f"Arquivo {arquivo} não encontrado.")
     return lista
 
-def _tokenizar_linha(self, linha: str) -> list:
-    linha_normalizada = self._remover_acentos(linha.lower())
+def tokenizar_linha( linha: str) -> list:
+    linha_normalizada =remover_acentos(linha.lower())
     return re.findall(r"\w+", linha_normalizada)

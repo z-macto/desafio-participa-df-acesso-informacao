@@ -1,8 +1,11 @@
 import re
 import unicodedata
 
-from motor.juridico import expressoes_juridicas
+from motor.juridico import MotorJuridico
+from motor.nominal import detectar_substantivo_solicitacao
 from motor.solicitacoes import Solicitacoes
+from motor.texto import carregar_lista, remover_acentos, tokenizar_linha
+
 
 class Motor:
     def __init__(self, 
@@ -11,17 +14,17 @@ class Motor:
                  arquivo_substantivos_solicitacao: str = "dados/parametros/substantivos_solicitacao.txt",):
         
        
-                
-        self.palavras_proibidas = self._carregar_lista(arquivo_palavras_proibidas)
+        self.juridico = MotorJuridico()
+
+        self.palavras_proibidas = carregar_lista(arquivo_palavras_proibidas)
         self.palavras_solicitacao = Solicitacoes().carregar()
-        self.substantivos_solicitacao = self._carregar_lista(arquivo_substantivos_solicitacao)
-        self.expressoes_juridicas_fixas = self._carregar_lista(arquivo_expressoes_juridicas_fixas)
+        self.substantivos_solicitacao = carregar_lista(arquivo_substantivos_solicitacao)
+        self.expressoes_juridicas_fixas = carregar_lista(arquivo_expressoes_juridicas_fixas)
 
         # Expressões jurídicas com verbos conjugáveis
-        self.expressoes_juridicas_conjugaveis = expressoes_juridicas()
+        self.expressoes_juridicas_conjugaveis =  self.juridico.obter_expressoes_uridcas()
 
-        # Lista final expandida
-        self.expressoes_juridicas = self._gerar_expressoes_juridicas()
+        self.expressoes_juridicas =  self.juridico.gerar_expressoes_juridicas()
 
 
     def analisar(self, texto: str) -> dict:
@@ -32,8 +35,8 @@ class Motor:
         motivo_bloqueou = []
 
         for linha in linhas:
-            tokens = self._tokenizar_linha(linha)
-            linha_normalizada = self._remover_acentos(linha.lower())
+            tokens = tokenizar_linha(linha)
+            linha_normalizada = remover_acentos(linha.lower())
 
             # Detecta solicitação (verbo)
             expressao_solicitacao = None
@@ -43,10 +46,10 @@ class Motor:
                     break
 
             # Detecta substantivo de solicitação
-            substantivo_solicitacao = self._detectar_substantivo_solicitacao(linha_normalizada)
+            substantivo_solicitacao = detectar_substantivo_solicitacao(self.substantivos_solicitacao,linha_normalizada)
 
             # Detecta contexto jurídico
-            expressao_juridica = self._detectar_contexto_juridico(linha_normalizada)
+            expressao_juridica =  self.juridico.detectar_contexto_juridico(linha_normalizada)
 
             # Detecta termo proibido (só se houver solicitação ou contexto jurídico)
             termo_invalido = None
