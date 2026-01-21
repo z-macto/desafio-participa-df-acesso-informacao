@@ -1,0 +1,15 @@
+pedido
+requerimento
+solicitacao
+necessidade
+necessito
+demanda
+reclamacao
+denuncia
+duvida
+questionamento
+manifestacao
+informacao
+acesso
+qual
+que

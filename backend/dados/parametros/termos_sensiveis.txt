@@ -1,0 +1,47 @@
+cpf
+cpfs
+rg
+rgs
+cnh
+cnhs
+titulo de eleitor
+titulos de eleitor
+titulo eleitoral
+titulos eleitorais
+reservista
+reservistas
+carteira de trabalho
+carteiras de trabalho
+matricula
+matriculas
+oab
+oabs
+telefone
+telefones
+tel
+tels
+celular
+celulares
+whatsapp
+whatsapps
+zap
+email
+emails
+e-mail
+e-mails
+endereco
+enderecos
+nome completo
+nomes completos
+identidade
+identidades
+cnpj
+cnpjs
+passaporte
+prontuário
+prontuários
+laudo medico
+laudos medicos
+atestado
+atestados
+CID
