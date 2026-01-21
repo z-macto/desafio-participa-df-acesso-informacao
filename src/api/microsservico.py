@@ -48,3 +48,18 @@ def solicitar_analise():
     print(resposta_json.get_json())
 
     return resposta_json, 200
+
+
+@api_bp.route("/api/testes", methods=["GET"])
+def realizar_testes():
+    pasta: str = "dados/testes"
+    testes = Testes(pasta)
+    objeto_resposta = testes.executar()
+
+    resposta_json = jsonify({
+        "resposta": objeto_resposta,
+    })
+
+    print(resposta_json.get_json())
+
+    return resposta_json, 200
