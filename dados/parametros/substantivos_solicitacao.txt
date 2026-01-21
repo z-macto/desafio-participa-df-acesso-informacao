@@ -11,11 +11,5 @@ questionamento
 manifestacao
 informacao
 acesso
-copia
-integra
-relatorio
-listagem
-tabela
-dados
-documentos
-arquivos
+qual
+que

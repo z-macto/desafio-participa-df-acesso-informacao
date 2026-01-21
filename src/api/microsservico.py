@@ -1,5 +1,8 @@
 import json
+import re
+
 from backend.motor.motor import Motor
+from backend.motor.texto import remover_acentos
 from backend.testes.testes import Testes
 
 
@@ -9,6 +12,9 @@ def consultar_resposta(texto: str) -> dict:
     """
     motor = Motor()
     objeto_resposta = motor.analisar(texto)
+
+
+
     return objeto_resposta
 
 def consultar_testes(pasta: str = "dados/testes") -> dict:

@@ -1,4 +1,6 @@
 import json
+import math
+import re
 
 from backend.motor.juridico import MotorJuridico
 from backend.motor.nominal import detectar_substantivo_solicitacao
@@ -28,6 +30,24 @@ class Motor:
         self.expressoes_juridicas = self.juridico.gerar_expressoes_juridicas()
 
     def analisar(self, texto: str) -> dict:
+
+        documentos_encontrados = []
+        DOCUMENTO_CPF = r"\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b"
+        DOCUMENTO_CNPJ =r"\b\d{2}\.?\d{3}\.?\d{3}/?\d{4}-?\d{2}\b"
+        DOCUMENTO_RG = r"\b\d{2}\.?\d{3}\.?\d{3}-?\d{1}\b"
+        DOCUMENTO_MATRICULA = r"\b\d{3}\.\d{3}\s\d\b"
+
+        for linha_simples in texto.split(" "):
+            linha_simples = remover_acentos(linha_simples.lower())
+
+            # 🔎 Detecta CPFs usando regex
+            for documento in re.findall(DOCUMENTO_CPF, linha_simples):
+                documentos_encontrados.append(("CPF",documento))
+            for documento in re.findall(DOCUMENTO_CNPJ, linha_simples):
+                documentos_encontrados.append(("CNPJ",documento))
+            for documento in re.findall(DOCUMENTO_RG, linha_simples):
+                documentos_encontrados.append(("RG",documento))
+
         linhas = texto.split(".")
         resultado_linhas = []
         invalido = False
@@ -41,12 +61,13 @@ class Motor:
         questionamento_solicitacao_linhas = 0
         questionamento_total_linhas = 0
 
+
         for linha in linhas:
             tokens = tokenizar_linha(linha)
             linha_normalizada = remover_acentos(linha.lower())
 
-            termos_proibidos_encontrados = []
-            verbos_solicitacao_encontrados = []
+            termos_proibidos_encontrados = set()
+            verbos_solicitacao_encontrados = set()
             tem_solicitacao = False
             tem_termo_proibido = False
             tem_contexto_juridico = False
@@ -54,7 +75,7 @@ class Motor:
             # Detecta verbos de solicitação
             for p in self.palavras_solicitacao:
                 if p in tokens:
-                    verbos_solicitacao_encontrados.append(p)
+                    verbos_solicitacao_encontrados.add(p)
                     tem_solicitacao = True
 
             # Detecta substantivo de solicitação
@@ -62,7 +83,7 @@ class Motor:
                 self.substantivos_solicitacao, linha_normalizada
             )
             if substantivo_solicitacao:
-                verbos_solicitacao_encontrados.append(substantivo_solicitacao)
+                verbos_solicitacao_encontrados.add(substantivo_solicitacao)
                 tem_solicitacao = True
 
             # Detecta contexto jurídico
@@ -73,7 +94,7 @@ class Motor:
             # Detecta termos proibidos
             for token in tokens:
                 if token in self.palavras_proibidas:
-                    termos_proibidos_encontrados.append(token)
+                    termos_proibidos_encontrados.add(token)
                     tem_termo_proibido = True
                     criticidade_palavras_proibidas += 1
 
@@ -91,7 +112,7 @@ class Motor:
                     "expressao": verbos_solicitacao_encontrados or expressao_juridica,
                     "termo_invalido": termos_proibidos_encontrados,
                     "posicao": linha_normalizada.find(
-                        verbos_solicitacao_encontrados[0] if verbos_solicitacao_encontrados else ""
+                        next(iter(verbos_solicitacao_encontrados), "")
                     )
                 })
                 status_linha = "NAO"
@@ -120,7 +141,7 @@ class Motor:
         # Validação geral
         if invalido:
             validacao = "Esse pedido solicita acesso a informacoes pessoais."
-            status = "NAO"
+            status = "NÃO"
         else:
             validacao = "Pedido aceitavel !"
             status = "SIM"
@@ -145,6 +166,23 @@ class Motor:
         impessoalidade = round(impessoalidade, 2)
         indice_final = round(indice_final, 2)
 
+        """ Calcula o Índice Final robusto conforme a fórmula descrita. """
+        # Normalizações para faixa [0,1]
+        critnorm = criticidade / (criticidade + 1) if criticidade >= 0 else 0
+        persnorm = pessoalidade / (pessoalidade + 1) if pessoalidade >= 0 else 0
+        # Log-transformação
+        logfactor = math.log(
+            (pessoalidade + 1) * (criticidade_verbos_solicitacao + 1) * (criticidade_palavras_proibidas + 1))
+        # Índice Final robusto
+
+        indice_comparavel = 0
+        if criticidade > 0:
+            indice_comparavel = logfactor * (questionamento + 1) * persnorm
+        else:
+            indice_comparavel = -logfactor * (questionamento + 1) * persnorm
+
+        indice_comparavel = round(indice_comparavel, 4)
+
         resultado = {
             "Indice": indice_final,
             "Criticidade": criticidade,
@@ -156,8 +194,9 @@ class Motor:
             "Status": status,
             "Linhas": resultado_linhas,
             "Motivo": motivo,
-            "Motivo_bloqueou": motivo_bloqueou
+            "Motivo_bloqueou": motivo_bloqueou,
+            "Documentos": list(documentos_encontrados)
         }
 
-        print(resultado)
+        #print(resultado)
         return resultado
