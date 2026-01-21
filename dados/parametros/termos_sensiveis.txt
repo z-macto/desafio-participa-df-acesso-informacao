@@ -38,18 +38,10 @@ identidades
 cnpj
 cnpjs
 passaporte
-nome completo de cidadão
-e-mail pessoal
-endereço residencial
+prontuário
 prontuários
 laudo medico
 laudos medicos
+atestado
 atestados
 CID
-lista de medicamentos
-origem racial
-convicção religiosa
-opinião política
-filiação partidária
-filiação sindical
-religião declarada em censos internos
