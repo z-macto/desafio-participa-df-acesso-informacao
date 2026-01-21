@@ -1,7 +1,7 @@
 import unicodedata
 
-from backend.src.backend.motor.texto import remover_acentos, carregar_lista
-from backend.src.backend.motor.verbo import carregar_verbos_irregulares, conjugar_regular
+from src.backend.motor.texto import remover_acentos, carregar_lista
+from src.backend.motor.verbo import carregar_verbos_irregulares, conjugar_regular
 
 
 class Solicitacoes:

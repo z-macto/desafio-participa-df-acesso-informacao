@@ -1,9 +1,9 @@
 import json
 import re
 
-from backend.src.backend.motor.motor import Motor
-from backend.src.backend.motor.texto import remover_acentos
-from backend.src.backend.testes.testes import Testes
+from src.backend.motor.motor import Motor
+from src.backend.motor.texto import remover_acentos
+from src.backend.testes.testes import Testes
 
 
 def consultar_resposta(texto: str) -> dict:
@@ -27,7 +27,7 @@ def consultar_testes(pasta: str = "dados/testes") -> dict:
 
 
 from flask import Blueprint, request, jsonify, session
-from backend.src.api.microsservico import consultar_resposta, consultar_testes
+from src.api.microsservico import consultar_resposta, consultar_testes
 
 api_bp = Blueprint("api", __name__)
 

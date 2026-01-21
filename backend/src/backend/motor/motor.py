@@ -1,9 +1,9 @@
 import json
 
-from backend.src.backend.motor.juridico import MotorJuridico
-from backend.src.backend.motor.nominal import detectar_substantivo_solicitacao
-from backend.src.backend.motor.solicitacoes import Solicitacoes
-from backend.src.backend.motor.texto import carregar_lista, remover_acentos, tokenizar_linha
+from src.backend.motor.juridico import MotorJuridico
+from src.backend.motor.nominal import detectar_substantivo_solicitacao
+from src.backend.motor.solicitacoes import Solicitacoes
+from src.backend.motor.texto import carregar_lista, remover_acentos, tokenizar_linha
 
 
 class Motor:

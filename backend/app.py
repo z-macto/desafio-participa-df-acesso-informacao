@@ -2,10 +2,10 @@
 
 from flask import Flask, send_from_directory
 
-from backend.src.api.microsservico import api_bp
+from src.api.microsservico import api_bp
 from src.backend.rotas.teste_routes import teste_bp
 
-app = Flask(__name__, static_folder="../distribuicao/dist", static_url_path="")
+app = Flask(__name__, static_folder="../distribuicao", static_url_path="")
 app.secret_key = "{DESAFIO-PARTICIPA-DF-ACESSO-INFORMACAO}"
 
 app.register_blueprint(teste_bp)

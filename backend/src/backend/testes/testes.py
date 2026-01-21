@@ -1,6 +1,6 @@
 import os
 import csv
-from backend.src.backend.motor.motor import Motor
+from src.backend.motor.motor import Motor
 
 class Testes:
     def __init__(self, pasta: str = "dados/testes") -> None:
