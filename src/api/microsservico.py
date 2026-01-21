@@ -24,3 +24,27 @@ def consultar_testes(pasta: str = "dados/testes") -> dict:
     testes = Testes(pasta)
     objeto_resposta = testes.executar()
     return objeto_resposta
+
+
+from flask import Blueprint, request, jsonify, session
+from src.api.microsservico import consultar_resposta, consultar_testes
+
+api_bp = Blueprint("api", __name__)
+
+@api_bp.route("/api/solicitar_analise", methods=["POST"])
+def solicitar_analise():
+    data = request.get_json(silent=True) or {}
+    texto = data.get("solicitacao", "").strip()
+
+    if not texto:
+        return jsonify({"erro": "Texto não informado"}), 400
+
+    resposta = consultar_resposta(texto)
+
+    resposta_json = jsonify({
+        "resposta": resposta,
+    })
+
+    print(resposta_json.get_json())
+
+    return resposta_json, 200
