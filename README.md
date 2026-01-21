@@ -7,7 +7,7 @@ Ele identifica:
 
 - **Solicitações** (verbos e expressões que indicam pedido).
 - **Contexto jurídico** (expressões legais e formais).
-- **Palavras proibidas** (informações pessoais ou termos sensíveis).
+- **Termos sensíveis** (informações pessoais ou termos sensíveis).
 
 Além disso, possui uma rota de **testes em massa** para validar automaticamente diversos exemplos.
 
@@ -19,7 +19,7 @@ Além disso, possui uma rota de **testes em massa** para validar automaticamente
 - Análise automática de cada linha do texto:
   - Detecta verbos e substantivos de solicitação.
   - Identifica expressões jurídicas fixas e conjugáveis.
-  - Bloqueia solicitações que contenham termos proibidos.
+  - Bloqueia solicitações que contenham termos sensíveis.
 - Histórico dos últimos 5 pedidos armazenados em sessão.
 - Página dedicada para execução de testes em lote.
 
