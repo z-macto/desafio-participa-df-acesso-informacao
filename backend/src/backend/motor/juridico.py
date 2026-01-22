@@ -1,4 +1,4 @@
-from src.backend.motor.verbo import conjugar_verbo
+from .verbo import conjugar_verbo
 
 
 class MotorJuridico:

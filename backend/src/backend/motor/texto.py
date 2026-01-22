@@ -1,6 +1,12 @@
+import os
 import re
 import unicodedata
 
+def obter_pasta(pasta:str):
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    pasta = os.path.join(base_dir, "../..", pasta)
+    pasta = os.path.abspath(pasta)
+    return pasta
 
 def remover_acentos( texto: str) -> str:
     return ''.join(

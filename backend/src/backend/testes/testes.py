@@ -2,15 +2,16 @@ import os
 import csv
 from src.backend.motor.motor import Motor
 
+from src.backend.motor.texto import obter_pasta
+
+
 class Testes:
     def __init__(self, pasta: str = "dados/testes") -> None:
         """
         Inicializa carregando todos os arquivos CSV da pasta indicada.
         Cada linha dos CSV vira uma entrada para teste.
         """
-        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        self.pasta = os.path.join(base_dir, "../..", pasta)
-        self.pasta = os.path.abspath(self.pasta)
+        self.pasta = obter_pasta(pasta)
 
         self.entradas = self._carregar_csvs()
         self.analisador = Motor()

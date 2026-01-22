@@ -1,9 +1,9 @@
 import json
 import re
 
-from src.backend.motor.motor import Motor
-from src.backend.motor.texto import remover_acentos
-from src.backend.testes.testes import Testes
+from ..backend.motor.motor import Motor
+from ..backend.motor.texto import remover_acentos
+from ..backend.testes.testes import Testes
 
 
 def consultar_resposta(texto: str) -> dict:

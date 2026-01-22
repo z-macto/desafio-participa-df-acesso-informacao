@@ -1,16 +1,18 @@
 import json
 
-from src.backend.motor.juridico import MotorJuridico
-from src.backend.motor.nominal import detectar_substantivo_solicitacao
-from src.backend.motor.solicitacoes import Solicitacoes
-from src.backend.motor.texto import carregar_lista, remover_acentos, tokenizar_linha
+from .juridico import MotorJuridico
+from .nominal import detectar_substantivo_solicitacao
+from .solicitacoes import Solicitacoes
+from .texto import carregar_lista, remover_acentos, tokenizar_linha
+
+from .texto import obter_pasta
 
 
 class Motor:
     def __init__(self,
-                 arquivo_termos_sensiveis: str = "dados/parametros/termos_sensiveis.txt",
-                 arquivo_expressoes_juridicas_fixas: str = "dados/parametros/expressoes_juridicas_fixas.txt",
-                 arquivo_substantivos_solicitacao: str = "dados/parametros/substantivos_solicitacao.txt"):
+                 arquivo_termos_sensiveis: str = obter_pasta("dados/parametros/termos_sensiveis.txt"),
+                 arquivo_expressoes_juridicas_fixas: str = obter_pasta("dados/parametros/expressoes_juridicas_fixas.txt"),
+                 arquivo_substantivos_solicitacao: str = obter_pasta("dados/parametros/substantivos_solicitacao.txt")):
 
         # Instância do motor jurídico
         self.juridico = MotorJuridico()

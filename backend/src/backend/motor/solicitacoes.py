@@ -1,14 +1,16 @@
 import unicodedata
 
-from src.backend.motor.texto import remover_acentos, carregar_lista
-from src.backend.motor.verbo import carregar_verbos_irregulares, conjugar_regular
+from .texto import remover_acentos, carregar_lista
+from .verbo import carregar_verbos_irregulares, conjugar_regular
+
+from .texto import obter_pasta
 
 
 class Solicitacoes:
     def __init__(self,
-                 arquivo_verbos_regulares: str = "dados/parametros/verbos_regulares.txt",
-                 arquivo_verbos_irregulares: str = "dados/parametros/verbos_irregulares.txt",
-                 arquivo_expressoes_fixas: str = "dados/parametros/expressoes_fixas.txt"):
+                 arquivo_verbos_regulares: str = obter_pasta("dados/parametros/verbos_regulares.txt"),
+                 arquivo_verbos_irregulares: str = obter_pasta("dados/parametros/verbos_irregulares.txt"),
+                 arquivo_expressoes_fixas: str = obter_pasta("dados/parametros/expressoes_fixas.txt")):
 
         # Carregar listas externas
         self.verbos_regulares = carregar_lista(arquivo_verbos_regulares)
