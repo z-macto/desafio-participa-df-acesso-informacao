@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 
 type Linha = {
   linha: string;
@@ -31,14 +31,14 @@ function RespostaWidget({ resposta }: Props) {
   // Define cor da borda conforme Status
   const borderStatus =
     resposta.Status === "SIM" ? "border-green-600" : "border-red-600";
-const corMarcador =
+  const corMarcador =
     resposta.Status === "SIM" ? "after:bg-green-600" : "after:bg-red-600";
-const corTexto =
+  const corTexto =
     resposta.Status === "SIM" ? "text-green-600" : "text-red-600";
 
   return (
     <div
-      className={`w-full max-w-3xl mt-6 mx-auto rounded-md shadow border-[3px] ${borderStatus}`}
+      className={`w-full max-w-3xl mt-6 mx-auto rounded-md shadow border-[3px] ${borderStatus} sem_cursor`}
     >
       {/* Menu de abas */}
       <div className="flex justify-center space-x-6 border-b bg-gray-100 rounded-t-md">
@@ -48,9 +48,11 @@ const corTexto =
             onClick={() => setAbaAtiva(aba)}
             className={`relative py-3 px-6 font-medium transition-colors duration-200 
               focus:outline-none border-none
-              ${abaAtiva === aba
-                ? `${corTexto} after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[3px] ${corMarcador}`
-                : `text-black hover:${corTexto}`}`}
+              ${
+                abaAtiva === aba
+                  ? `${corTexto} after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[3px] ${corMarcador}`
+                  : `text-black hover:${corTexto}`
+              }`}
           >
             {aba}
           </button>
@@ -60,24 +62,73 @@ const corTexto =
       {/* Conteúdo da aba */}
       <div className="p-4 bg-gray-100 rounded-b-md text-black">
         {abaAtiva === "Criticidade" && (
-          <div>
-            <p><strong>Status:</strong> {resposta.Status}</p>
-            <p><strong>Validação:</strong> {resposta.Validacao}</p>
-            <p><strong>Índice:</strong> {resposta.Indice}</p>
-            <p><strong>Criticidade:</strong> {resposta.Criticidade}</p>
-            <p><strong>Questionamento:</strong> {resposta.Questionamento}</p>
-            <p><strong>Pessoalidade:</strong> {resposta.Pessoalidade}</p>
-            <p><strong>Impessoalidade:</strong> {resposta.Impessoalidade}</p>
+          <div className="p-4 border rounded-lg bg-gray-50 shadow-md space-y-2 text-sm text-black">
+            {/* Status com destaque */}
+
+            {/* Validação */}
+            <div className="flex gap-2">
+              <strong className="text-black">Validação:</strong>
+              <span>{resposta.Validacao}</span>
+            </div>
+
+            {/* Índice */}
+            <div className="flex gap-2">
+              <strong className="text-black">Índice:</strong>
+              <span>{resposta.Indice}</span>
+            </div>
+
+            {/* Criticidade */}
+            <div className="flex gap-2">
+              <strong className="text-black">Criticidade:</strong>
+              <span>{resposta.Criticidade}</span>
+            </div>
+
+            {/* Questionamento */}
+            <div className="flex gap-2">
+              <strong className="text-black">Questionamento:</strong>
+              <span>{resposta.Questionamento}</span>
+            </div>
+
+            {/* Pessoalidade */}
+            <div className="flex gap-2">
+              <strong className="text-black">Pessoalidade:</strong>
+              <span>{resposta.Pessoalidade}</span>
+            </div>
+
+            {/* Impessoalidade */}
+            <div className="flex gap-2">
+              <strong className="text-black">Impessoalidade:</strong>
+              <span>{resposta.Impessoalidade}</span>
+            </div>
           </div>
         )}
 
         {abaAtiva === "Linhas" && (
           <div className="space-y-2">
             {resposta.Linhas?.map((linha, idx) => (
-              <div key={idx} className="p-2 border rounded bg-white text-black">
-                <p><strong>Linha:</strong> {linha.linha}</p>
-                <p><strong>Status:</strong> {linha.status}</p>
-                {linha.motivo && <p><strong>Motivo:</strong> {linha.motivo}</p>}
+              <div
+                key={idx}
+                className="p-2 border rounded bg-white text-black space-y-1"
+              >
+                {/* Linha */}
+                <div className="flex gap-2">
+                  <strong>Linha:</strong>
+                  <span>{linha.linha}</span>
+                </div>
+
+                {/* Status */}
+                <div className="flex gap-2">
+                  <strong>Status:</strong>
+                  <span>{linha.status}</span>
+                </div>
+
+                {/* Motivo (se existir) */}
+                {linha.motivo && (
+                  <div className="flex gap-2">
+                    <strong>Motivo:</strong>
+                    <span>{linha.motivo}</span>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -85,7 +136,9 @@ const corTexto =
 
         {abaAtiva === "Motivação" && (
           <div>
-            <p><strong>Motivo geral:</strong> {resposta.Motivo || "Nenhum"}</p>
+            <p>
+              <strong>Motivo geral:</strong> {resposta.Motivo || "Nenhum"}
+            </p>
             <pre className="text-sm whitespace-pre-wrap text-black">
               {JSON.stringify(resposta.Motivo_bloqueou, null, 2)}
             </pre>

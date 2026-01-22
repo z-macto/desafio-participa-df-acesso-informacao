@@ -30,7 +30,9 @@ class Motor:
         self.expressoes_juridicas = self.juridico.gerar_expressoes_juridicas()
 
     def analisar(self, texto: str) -> dict:
+        texto = texto.strip()
         linhas = texto.split(".")
+        linhas = [linha.strip() for linha in linhas if linha.strip()]
         resultado_linhas = []
         invalido = False
         motivo = None
