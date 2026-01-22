@@ -4,3 +4,5 @@ querer,querer,quero,quer,queremos,querem,quis,queria,quererei
 ter,ter,tenho,tem,temos,têm,tive,terei,teria
 obter,obter,obtenho,obtem,obtemos,obtem,obtive,obterei,obteria
 precisar,precisar,preciso,precisa,precisamos,precisam,precisei,precisarei
+exigir,exigir,exijo,exija,exige,exigimos,exijamos,exijam,exigi
+reivindicar,reivindicar,reivindique,reivindico,reivindica,reivindiquemos,reivindiquem
