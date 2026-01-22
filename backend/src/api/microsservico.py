@@ -1,9 +1,10 @@
 import json
 import re
 
+from . import api_bp
 from ..backend.motor.motor import Motor
-from ..backend.motor.texto import remover_acentos
 from ..backend.testes.testes import Testes
+from ..persistencia.banco_de_dados import BancoDados
 
 
 def consultar_resposta(texto: str) -> dict:
@@ -29,7 +30,6 @@ def consultar_testes(pasta: str = "dados/testes") -> dict:
 from flask import Blueprint, request, jsonify, session
 from src.api.microsservico import consultar_resposta, consultar_testes
 
-api_bp = Blueprint("api", __name__)
 
 @api_bp.route("/api/solicitar_analise", methods=["POST"])
 def solicitar_analise():
@@ -46,6 +46,9 @@ def solicitar_analise():
     })
 
     print(resposta_json.get_json())
+
+    db = BancoDados()
+    id_solicitacao = db.inserir_solicitacao(texto,json.dumps(resposta_json.get_json(), ensure_ascii=False))
 
     return resposta_json, 200
 

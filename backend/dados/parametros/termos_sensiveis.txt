@@ -45,3 +45,4 @@ laudos medicos
 atestado
 atestados
 CID
+declaracao de exercício findo

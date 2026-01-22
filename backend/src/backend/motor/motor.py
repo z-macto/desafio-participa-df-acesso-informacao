@@ -73,11 +73,28 @@ class Motor:
                 tem_contexto_juridico = True
 
             # Detecta termos proibidos
-            for token in tokens:
-                if token in self.termos_sensiveis:
-                    termos_sensiveis_encontrados.append(token)
-                    tem_termo_sensivel = True
-                    criticidade_termos_sensiveis += 1
+            termos_sensiveis_encontrados = []
+            tem_termo_sensivel = False
+
+            for termo in self.termos_sensiveis:
+                termo_tokens = termo.split()  # quebra o termo em palavras
+                tamanho = len(termo_tokens)
+
+                # caso seja termo de uma palavra
+                if tamanho == 1:
+                    if termo_tokens[0] in tokens:
+                        termos_sensiveis_encontrados.append(termo)
+                        tem_termo_sensivel = True
+                        criticidade_termos_sensiveis += 1
+
+                # caso seja termo com mais de uma palavra
+                else:
+                    for i in range(len(tokens) - tamanho + 1):
+                        if tokens[i:i + tamanho] == termo_tokens:
+                            termos_sensiveis_encontrados.append(termo)
+                            tem_termo_sensivel = True
+                            criticidade_termos_sensiveis += 1
+                            break  # evita duplicar o mesmo termo
 
             if tem_termo_sensivel:
                 criticidade_linhas_pessoal += 1
@@ -128,14 +145,13 @@ class Motor:
             status = "SIM"
 
         # Cálculos finais
-        if questionamento_total_linhas > 0:
-            criticidade = criticidade_linhas_pessoal * criticidade_verbos_solicitacao * criticidade_termos_sensiveis
-            questionamento = questionamento_solicitacao_linhas / questionamento_total_linhas
-            pessoalidade = criticidade_termos_sensiveis / questionamento_total_linhas
-        else:
-            criticidade = 0
-            questionamento = 0
-            pessoalidade = 0
+        criticidade = criticidade_linhas_pessoal * criticidade_verbos_solicitacao * criticidade_termos_sensiveis
+        questionamento = questionamento_solicitacao_linhas / questionamento_total_linhas
+        pessoalidade = criticidade_termos_sensiveis / questionamento_total_linhas
+
+        print("Linhas Pessoal = ",criticidade_linhas_pessoal)
+        print("Verbos Soliciticao = ",criticidade_verbos_solicitacao)
+        print("Termos Sensiveis = ",criticidade_termos_sensiveis)
 
         impessoalidade = 1 - pessoalidade
 

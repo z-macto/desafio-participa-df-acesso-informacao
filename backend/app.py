@@ -2,7 +2,7 @@
 
 from flask import Flask, send_from_directory
 
-from src.api.microsservico import api_bp
+from src.api import api_bp
 from src.backend.rotas.teste_routes import teste_bp
 
 app = Flask(__name__, static_folder="../distribuicao", static_url_path="")

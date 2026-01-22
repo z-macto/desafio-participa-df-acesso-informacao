@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 function Testes() {
   const [dados, setDados] = useState<any>(null);
@@ -44,7 +44,7 @@ function Testes() {
       </div>
 
       {/* Tabela de resultados */}
-      <div className="overflow-x-auto mt-6">
+      <div className="overflow-x-auto mt-6 sem_cursor">
         <table className="min-w-full border border-gray-300 bg-white rounded-md">
           <thead>
             <tr className="bg-gray-100">
@@ -57,15 +57,24 @@ function Testes() {
           </thead>
           <tbody>
             {dados.Resultados.map((res: any, idx: number) => {
-              const corFundo =
-                res.Status === "SIM" ? "bg-green-100" : "bg-red-100";
+              const badgeClasses =
+                res.Status === "SIM"
+                  ? "bg-green-200 text-green-800"
+                  : "bg-red-200 text-red-800";
+
               return (
-                <tr key={idx} className={`${corFundo} hover:opacity-80`}>
+                <tr key={idx} className={` hover:opacity-80`}>
                   <td className="px-4 py-2 border-b">{res.Retorno}</td>
                   <td className="px-4 py-2 border-b">{res.Validacao}</td>
                   <td className="px-4 py-2 border-b">{res.Indice}</td>
                   <td className="px-4 py-2 border-b">{res.Criticidade}</td>
-                  <td className="px-4 py-2 border-b font-bold">{res.Status}</td>
+                  <td className="px-4 py-2 border-b font-bold">
+                    <span
+                      className={`px-2 py-1 rounded-full text-sm font-semibold ${badgeClasses}`}
+                    >
+                      {res.Status}
+                    </span>
+                  </td>
                 </tr>
               );
             })}
