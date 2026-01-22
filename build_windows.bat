@@ -21,6 +21,10 @@ if not exist distribuicao (
     mkdir distribuicao
 )
 
+if not exist armazenamento_de_dados (
+    mkdir armazenamento_de_dados
+)
+
 echo 📂 Copiando arquivos gerados para 'distribuicao'...
 xcopy /E /Y frontend\dist\* distribuicao\
 

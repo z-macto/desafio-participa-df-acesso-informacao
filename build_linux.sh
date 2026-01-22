@@ -18,6 +18,7 @@ cd ..
 
 # Criar pasta de distribuição se não existir
 mkdir -p distribuicao
+mkdir -p armazenamento_de_dados
 
 echo "📂 Copiando arquivos gerados para 'distribuicao'..."
 cp -r frontend/dist/* distribuicao/
