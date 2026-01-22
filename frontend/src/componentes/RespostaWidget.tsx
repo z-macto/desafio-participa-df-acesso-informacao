@@ -100,6 +100,27 @@ function RespostaWidget({ resposta }: Props) {
               <strong className="text-black">Impessoalidade:</strong>
               <span>{resposta.Impessoalidade}</span>
             </div>
+
+            {/* Linha do tempo horizontal */}
+            <div className="mt-6 flex items-center justify-between">
+              {[
+                { label: "Criticidade", value: resposta.Criticidade },
+                { label: "Pessoalidade", value: resposta.Pessoalidade },
+              ].map((item, idx) => (
+                <div key={idx} className="flex flex-col items-center flex-1">
+                  {/* Círculo */}
+                  <div
+                    className={`w-6 h-6 rounded-full border-2 ${
+                      item.value > 0
+                        ? "bg-red-500 border-red-600"
+                        : "bg-green-500 border-green-600"
+                    }`}
+                  ></div>
+                  {/* Label */}
+                  <span className="mt-2 text-xs text-black">{item.label}</span>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
