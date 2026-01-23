@@ -16,6 +16,7 @@ com base no direito
 com base na lei
 com base na legislação
 com base na constituição
+com base no principio
 em conformidade com a lei
 em conformidade com a legislação
 em conformidade com o direito
@@ -52,18 +53,23 @@ Conforme estatuído
 Conforme preconiza
 Conforme preceitua
 Conforme prescreve
+Conforme os parametros
 Dada a inteligência da súmula
 Em acatamento
 Em atenção
 Em consonância com
 Em estrita observância
 Em obediência
+Em observância
+Em razão
+Em respeito à autodeterminação informativa estabelecida
 Na esteira da jurisprudência
 Na forma da lei
 Na forma da legislação
 Por força do decreto
 Por força da lei
 Por força da legislação
+Garantindo o livre acesso previsto
 Segundo o entendimento
 Segundo reza
 Sob a diretriz
@@ -71,3 +77,8 @@ Sob a égide
 Sob a ótica
 Sob o pálio
 Sob o prisma
+Dando cumprimento
+Seguindo o rigor
+Seguindo as normas
+Nos moldes
+Atendendo ao preceito
