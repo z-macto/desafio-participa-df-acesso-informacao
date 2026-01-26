@@ -1,3 +1,4 @@
+
 # 📖 Projeto: Desafio Participa DF – Acesso à Informação
 
 ## 📌 Descrição
@@ -8,8 +9,9 @@ Ele identifica:
 - **Solicitações** (verbos e expressões que indicam pedido).
 - **Contexto jurídico** (expressões legais e formais).
 - **Termos sensíveis** (informações pessoais ou termos sensíveis).
+- **Documentos rastreáveis** (CPF, RG, telefone, e-mail, processo SEI).
 
-Além disso, possui uma rota de **testes em massa** para validar automaticamente diversos exemplos.
+Além disso, possui rotas para **testes em massa**, **estatísticas de uso** e **consulta de solicitações armazenadas**.
 
 ---
 
@@ -20,8 +22,10 @@ Além disso, possui uma rota de **testes em massa** para validar automaticamente
   - Detecta verbos e substantivos de solicitação.
   - Identifica expressões jurídicas fixas e conjugáveis.
   - Bloqueia solicitações que contenham termos sensíveis.
-- Histórico dos últimos 5 pedidos armazenados em sessão.
+- Histórico dos últimos pedidos armazenados em banco de dados.
 - Página dedicada para execução de testes em lote.
+- Estatísticas de solicitações realizadas nos últimos 30 dias.
+- Consulta paginada de solicitações já registradas.
 
 ---
 
@@ -34,42 +38,53 @@ git clone https://github.com/z-macto/desafio-participa-df-acesso-informacao.git
 cd desafio-participa-df-acesso-informacao
 ```
 
-2. Instalar dependências
+### 2. Instalar dependências
 
 ```bash
-   pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
-3. Executar a aplicação
+### 3. Executar a aplicação
 
 ```bash
-   python3 app.py
+python3 app.py
 ```
 
-4. Acesse no navegador:
+### 4. Acesse no navegador
 
 ```bash
 http://localhost:5000
 ```
 
+---
+
 ## 📂 Rotas disponíveis
 
-### Tabela de rotas
+| Rota                        | Método | Descrição                                                                 |
+| --------------------------- | ------ | ------------------------------------------------------------------------- |
+| `/`                         | GET    | Página principal para análise de solicitações                             |
+| `/testes`                   | GET    | Página para execução de testes em massa                                   |
+| `/api/solicitar_analise`    | POST   | Recebe um texto e retorna análise completa em JSON                        |
+| `/api/testes`               | GET    | Executa testes em lote e retorna resumo                                   |
+| `/api/estatisticas_30dias`  | GET    | Retorna estatísticas de solicitações dos últimos 30 dias                  |
+| `/api/solicitacoes/info`    | GET    | Retorna total de solicitações e número de páginas                         |
+| `/api/solicitacoes`         | GET    | Lista solicitações registradas, com suporte a paginação (`?pagina=N`)     |
 
-| Rota      | Descrição                                     |
-| --------- | --------------------------------------------- |
-| `/`       | Página principal para análise de solicitações |
-| `/testes` | Página para execução de testes em massa       |
+---
 
-## ✅ Exemplo de uso
+## ✅ Exemplos de uso
 
-### Entrada
+### Exemplo 1 – Solicitação aceitável
+
+**Entrada:**
 
 ```text
 Venho por meio desta solicitar acesso aos documentos do processo.
 ```
 
-```bash
+**Saída:**
+
+```json
 {
   "Validacao": "Pedido aceitavel !",
   "Status": "SIM",
@@ -84,11 +99,19 @@ Venho por meio desta solicitar acesso aos documentos do processo.
 }
 ```
 
+---
+
+### Exemplo 2 – Solicitação inválida (dados pessoais)
+
+**Entrada:**
+
 ```text
 Venho por meio desta solicitar acesso ao CPF dos servidores.
 ```
 
-```bash
+**Saída:**
+
+```json
 {
   "Validacao": "Esse pedido solicita acesso a informacoes pessoais.",
   "Status": "NAO",
@@ -111,11 +134,19 @@ Venho por meio desta solicitar acesso ao CPF dos servidores.
 }
 ```
 
+---
+
+### Exemplo 3 – Solicitação aceitável com contexto jurídico
+
+**Entrada:**
+
 ```text
 Com fundamento no artigo 5º da Constituição, venho requerer acesso aos documentos.
 ```
 
-```bash
+**Saída:**
+
+```json
 {
   "Validacao": "Pedido aceitavel !",
   "Status": "SIM",
@@ -129,3 +160,60 @@ Com fundamento no artigo 5º da Constituição, venho requerer acesso aos docume
   ]
 }
 ```
+
+---
+
+### Exemplo 4 – Solicitação inválida com múltiplos dados pessoais
+
+**Entrada:**
+
+```text
+Solicito acesso ao banco de dados contendo nome, CPF, RG e endereço dos servidores.
+```
+
+**Saída:**
+
+```json
+{
+  "Validacao": "Esse pedido solicita acesso a informacoes pessoais.",
+  "Status": "NAO",
+  "Linhas": [
+    {
+      "linha": "Solicito acesso ao banco de dados contendo nome, CPF, RG e endereço dos servidores.",
+      "status": "NAO",
+      "motivo": "Solicitação detectada (\"solicito\") com termos inválidos (\"cpf\", \"rg\", \"endereço\")",
+      "contexto_juridico": false
+    }
+  ],
+  "Motivo": "Solicitação detectada (\"solicito\") com termos inválidos (\"cpf\", \"rg\", \"endereço\")",
+  "Motivo_bloqueou": [
+    {
+      "expressao": "solicito",
+      "termo_invalido": ["cpf", "rg", "endereço"],
+      "posicao": 0
+    }
+  ]
+}
+```
+
+---
+
+## 📊 Estatísticas e Rastreabilidade
+
+- O motor calcula métricas como **Criticidade**, **Questionamento**, **Pessoalidade**, **Impessoalidade** e um **Índice Final** consolidado.
+- O **Índice de Rastreabilidade** indica quantos documentos pessoais foram encontrados no texto (CPF, RG, telefone, e-mail, processo SEI).
+
+---
+
+## 🛡️ Segurança e Configuração
+
+- Detectores de padrões com **REGEX** para documentos.
+- Parser semântico para frases em português.
+- Conjugador de verbos regulares e lista de verbos irregulares.
+- Arquivos de parâmetros configuráveis para:
+  - Termos sensíveis
+  - Verbos regulares e irregulares
+  - Termos de solicitação
+  - Parâmetros jurídicos
+
+---
