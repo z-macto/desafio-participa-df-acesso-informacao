@@ -28,6 +28,12 @@ function DocumentacaoMetodologia() {
         "A impessoalidade é o complemento da pessoalidade (1 - pessoalidade). Indica o quanto o pedido se mantém distante de dados pessoais.",
     },
     {
+      titulo: "Rastreabilidade",
+      cor: "red",
+      descricao:
+        "O índice de Rastreabilidade representa a soma de documentos pessoais identificados no texto (CPF, RG, telefone, e-mail, processo SEI).Ele indica o nível de exposição de dados sensíveis: quanto maior o valor, mais informações rastreáveis foram encontradas",
+    },
+    {
       titulo: "Índice Final",
       cor: "red",
       descricao:
@@ -39,7 +45,6 @@ function DocumentacaoMetodologia() {
     <div>
       {/* Card principal explicando o motor */}
       <div className="max-w-2xl mx-auto mt-8 p-6 bg-white rounded-lg shadow-md border-l-4 border-green-600">
-        {/* Cabeçalho */}
         <div className="flex items-center gap-3 mb-4">
           <div className="bg-green-100 p-2 rounded-full">
             <CalculatorIcon className="h-6 w-6 text-green-600" />
@@ -54,38 +59,35 @@ function DocumentacaoMetodologia() {
           </div>
         </div>
 
-        {/* Explicação do Motor */}
         <h3 className="text-green-700 font-semibold mb-2">
           Como funciona o algoritmo do Motor de Análise
         </h3>
         <p className="text-sm text-gray-700 leading-relaxed text-justify mb-2">
-          O motor foi desenvolvido para avaliar solicitações de forma
-          automática, identificando se um texto contém elementos que
-          caracterizam dados pessoais ou pedidos inválidos. O processo segue
-          estas etapas principais:
+          O motor avalia solicitações de forma automática, identificando se um
+          texto contém elementos que caracterizam dados pessoais ou pedidos
+          inválidos. O processo segue estas etapas principais:
         </p>
         <ul className="list-disc pl-6 space-y-1 text-sm text-gray-700 text-justify">
           <li>
-            <strong>Pré-processamento:</strong> o conteúdo é dividido em linhas
-            e normalizado (remoção de espaços, acentos e padronização).
+            <strong>Pré-processamento:</strong> normalização do texto e divisão
+            em linhas.
           </li>
           <li>
-            <strong>Detecção de padrões:</strong> identifica verbos e
-            substantivos de solicitação, contexto jurídico e termos sensíveis.
+            <strong>Detecção de padrões:</strong> identificação de
+            verbos/substantivos de solicitação, contexto jurídico e termos
+            sensíveis.
           </li>
           <li>
-            <strong>Classificação:</strong> se uma linha contém solicitação
-            junto com termo sensível, ela é marcada como inválida; caso
-            contrário, é aceitável.
+            <strong>Classificação:</strong> linhas com solicitação + termo
+            sensível são inválidas; as demais são aceitáveis.
           </li>
           <li>
-            <strong>Cálculo de métricas:</strong> gera valores de criticidade,
-            questionamento, pessoalidade e impessoalidade, além de um índice
-            final.
+            <strong>Cálculo de métricas:</strong> gera criticidade,
+            questionamento, pessoalidade, impessoalidade e índice final.
           </li>
           <li>
-            <strong>Validação geral:</strong> se qualquer linha for inválida, o
-            pedido é classificado como não aceitável; caso contrário, é válido.
+            <strong>Validação geral:</strong> se alguma linha for inválida, o
+            pedido é classificado como não aceitável.
           </li>
         </ul>
         <p className="text-sm text-gray-700 leading-relaxed text-justify mt-2">
@@ -101,9 +103,8 @@ function DocumentacaoMetodologia() {
             key={idx}
             className={`w-full p-6 bg-white rounded-lg shadow-md border-l-4 border-${card.cor}-600`}
           >
-            {/* Cabeçalho */}
             <div className="flex items-center gap-3 mb-4">
-              <div className={`bg-${card.cor}-100 p-2 rounded-full`}>
+              <div className={`p-2 rounded-full bg-${card.cor}-100`}>
                 <CalculatorIcon className={`h-6 w-6 text-${card.cor}-600`} />
               </div>
               <div>
@@ -113,12 +114,10 @@ function DocumentacaoMetodologia() {
                 <span
                   className={`text-xs font-bold text-white bg-${card.cor}-600 px-2 py-1 rounded`}
                 >
-                  MOTOR
+                  MÉTRICA
                 </span>
               </div>
             </div>
-
-            {/* Conteúdo */}
             <p className="text-sm text-gray-700 leading-relaxed text-justify">
               {card.descricao}
             </p>
