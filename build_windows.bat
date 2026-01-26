@@ -31,4 +31,4 @@ xcopy /E /Y frontend\dist\* distribuicao\
 echo ✅ Build concluído e arquivos disponíveis em 'distribuicao'.
 
 echo ⚙️ Executando aplicação...
-python backend\app.py
+py backend\app.py
