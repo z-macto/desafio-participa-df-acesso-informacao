@@ -15,13 +15,13 @@ function DocumentacaoVisaoGeral() {
     },
     {
       icon: DocumentTextIcon,
-      titulo: "LAI - Lei de Acesso à Informação (Lei 12.527/2011)",
+      titulo: "LAI - Lei de Acesso à Informação (Lei n° 12.527/2011)",
       descricao:
         "Garante o direito de acesso às informações públicas, promovendo transparência e controle social.",
     },
     {
       icon: GlobeAltIcon,
-      titulo: "Governança e Transparência Digital (Lei nº 14.129/2021)",
+      titulo: "Governança e Transparência Digital (Lei n° 14.129/2021)",
       descricao:
         "Promove boas práticas de gestão de dados e uso responsável das informações em ambientes digitais.",
     },
