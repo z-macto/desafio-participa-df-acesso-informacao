@@ -9,19 +9,19 @@ function DocumentacaoVisaoGeral() {
   const cards = [
     {
       icon: ShieldCheckIcon,
-      titulo: "LGPD - Lei Geral de Proteção de Dados",
+      titulo: "LGPD - Lei Geral de Proteção de Dados (Lei n° 13.709/2018)",
       descricao:
         "Estabelece regras para coleta, uso e armazenamento de dados pessoais, garantindo privacidade e segurança.",
     },
     {
       icon: DocumentTextIcon,
-      titulo: "LAI - Lei de Acesso à Informação",
+      titulo: "LAI - Lei de Acesso à Informação (Lei 12.527/2011)",
       descricao:
         "Garante o direito de acesso às informações públicas, promovendo transparência e controle social.",
     },
     {
       icon: GlobeAltIcon,
-      titulo: "Governança e Transparência Digital",
+      titulo: "Governança e Transparência Digital (Lei nº 14.129/2021)",
       descricao:
         "Promove boas práticas de gestão de dados e uso responsável das informações em ambientes digitais.",
     },
