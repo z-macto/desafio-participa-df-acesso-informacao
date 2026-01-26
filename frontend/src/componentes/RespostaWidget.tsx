@@ -14,9 +14,12 @@ type Resposta = {
   Questionamento: number;
   Pessoalidade: number;
   Impessoalidade: number;
+  Rastreabilidade: number;
   Linhas: Linha[];
   Motivo?: string;
   Motivo_bloqueou?: any;
+  Mensagem: string;
+  Documentos: string;
 };
 
 interface Props {
@@ -42,21 +45,23 @@ function RespostaWidget({ resposta }: Props) {
     >
       {/* Menu de abas */}
       <div className="flex justify-center space-x-6 border-b bg-gray-100 rounded-t-md">
-        {["Criticidade", "Linhas", "Motivação"].map((aba) => (
-          <button
-            key={aba}
-            onClick={() => setAbaAtiva(aba)}
-            className={`relative py-3 px-6 font-medium transition-colors duration-200 
+        {["Criticidade", "Linhas", "Motivação", "Documentos", "Mensagem"].map(
+          (aba) => (
+            <button
+              key={aba}
+              onClick={() => setAbaAtiva(aba)}
+              className={`relative py-3 px-6 font-medium transition-colors duration-200 
               focus:outline-none border-none
               ${
                 abaAtiva === aba
                   ? `${corTexto} after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[3px] ${corMarcador}`
                   : `text-black hover:${corTexto}`
               }`}
-          >
-            {aba}
-          </button>
-        ))}
+            >
+              {aba}
+            </button>
+          ),
+        )}
       </div>
 
       {/* Conteúdo da aba */}
@@ -101,6 +106,12 @@ function RespostaWidget({ resposta }: Props) {
               <span>{resposta.Impessoalidade}</span>
             </div>
 
+            {/* Rastreabilidade */}
+            <div className="flex gap-2">
+              <strong className="text-black">Rastreabilidade:</strong>
+              <span>{resposta.Rastreabilidade}</span>
+            </div>
+
             {/* Linha do tempo horizontal */}
             <div className="mt-6 flex items-center justify-between">
               {[
@@ -129,7 +140,11 @@ function RespostaWidget({ resposta }: Props) {
             {resposta.Linhas?.map((linha, idx) => (
               <div
                 key={idx}
-                className="p-2 border rounded bg-white text-black space-y-1"
+                className={`p-2 border rounded space-y-1 ${
+                  linha.status === "NAO"
+                    ? "bg-red-100 border-red-400 text-red-700"
+                    : "bg-white text-black"
+                }`}
               >
                 {/* Linha */}
                 <div className="flex gap-2">
@@ -156,13 +171,69 @@ function RespostaWidget({ resposta }: Props) {
         )}
 
         {abaAtiva === "Motivação" && (
-          <div>
+          <div className="space-y-2">
             <p>
               <strong>Motivo geral:</strong> {resposta.Motivo || "Nenhum"}
             </p>
-            <pre className="text-sm whitespace-pre-wrap text-black">
-              {JSON.stringify(resposta.Motivo_bloqueou, null, 2)}
-            </pre>
+
+            {resposta.Linhas?.filter((linha) => linha.status === "NAO").map(
+              (linha, idx) => (
+                <div
+                  key={idx}
+                  className="p-2 border rounded bg-red-100 border-red-400 text-red-700 space-y-1"
+                >
+                  {/* Linha */}
+                  <div className="flex gap-2 flex-wrap">
+                    <strong>Linha:</strong>
+                    <span>{linha.linha}</span>
+                  </div>
+
+                  {/* Status */}
+                  <div className="flex gap-2">
+                    <strong>Status:</strong>
+                    <span>{linha.status}</span>
+                  </div>
+
+                  {/* Motivo */}
+                  {linha.motivo && (
+                    <div className="flex gap-2">
+                      <strong>Motivo:</strong>
+                      <span>{linha.motivo}</span>
+                    </div>
+                  )}
+                </div>
+              ),
+            )}
+          </div>
+        )}
+        {abaAtiva === "Documentos" && (
+          <div className="space-y-2">
+            {/* Lista de documentos */}
+            {resposta.Documentos &&
+              Object.entries(resposta.Documentos).map(
+                ([tipo, valores], idx) => (
+                  <div
+                    key={idx}
+                    className="p-2 border rounded bg-yellow-50 border-yellow-400 text-yellow-800 space-y-1"
+                  >
+                    {/* Tipo de documento */}
+                    <div className="flex gap-2 flex-wrap">
+                      <strong>{tipo}:</strong>
+                      <span>
+                        {Array.isArray(valores) && valores.length > 0
+                          ? valores.join(", ")
+                          : "Nenhum encontrado"}
+                      </span>
+                    </div>
+                  </div>
+                ),
+              )}
+          </div>
+        )}
+
+        {abaAtiva === "Mensagem" && (
+          <div>
+            <p>{resposta.Mensagem}</p>
           </div>
         )}
       </div>

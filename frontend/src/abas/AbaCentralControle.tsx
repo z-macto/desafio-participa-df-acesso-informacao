@@ -1,10 +1,24 @@
 import { useEffect, useState } from "react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 interface Solicitacao {
   id: string;
   data: string;
   horario: string;
-  analise: string; // contém JSON com campo "status"
+  analise: string;
+}
+
+interface EstatisticaDia {
+  data: string; // formato esperado: YYYY-MM-DD
+  total: number;
 }
 
 function CentralControle() {
@@ -14,7 +28,9 @@ function CentralControle() {
   const [erro, setErro] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // Carregar info inicial (total de páginas)
+  const [estatisticas, setEstatisticas] = useState<EstatisticaDia[]>([]);
+
+  // Carregar info inicial (total de páginas e estatísticas)
   useEffect(() => {
     const fetchInfo = async () => {
       try {
@@ -28,7 +44,22 @@ function CentralControle() {
         setErro("Falha ao carregar informações");
       }
     };
+
+    const fetchEstatisticas = async () => {
+      try {
+        const response = await fetch("/api/estatisticas_30dias");
+        if (response.ok) {
+          const data = await response.json();
+          setEstatisticas(data.resposta);
+        }
+      } catch (error) {
+        console.error(error);
+        setErro("Falha ao carregar estatísticas");
+      }
+    };
+
     fetchInfo();
+    fetchEstatisticas();
   }, []);
 
   // Carregar solicitações da página atual
@@ -62,6 +93,44 @@ function CentralControle() {
       <h2 className="text-xl font-bold text-blue-600 text-center">
         Central de Controle
       </h2>
+
+      {/* Gráfico dos últimos 30 dias */}
+      <div className="w-full h-64 mt-6">
+        <ResponsiveContainer>
+          <LineChart data={estatisticas}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              dataKey="data"
+              tickFormatter={(value) => {
+                // transforma "2026-01-25" em "25/01"
+                const d = new Date(value);
+                return `${d.getDate().toString().padStart(2, "0")}/${(
+                  d.getMonth() + 1
+                )
+                  .toString()
+                  .padStart(2, "0")}`;
+              }}
+            />
+
+            <YAxis />
+            <Tooltip
+              formatter={(value: any) => [`${value}`, "Total"]}
+              labelFormatter={(label: any) => {
+                const partes = label.split("-");
+                return partes.length === 3
+                  ? `${partes[2]}/${partes[1]}/${partes[0]}`
+                  : label;
+              }}
+            />
+            <Line
+              type="monotone"
+              dataKey="total"
+              stroke="#2563eb"
+              strokeWidth={2}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
 
       {loading ? (
         <p className="text-gray-500 text-center mt-4">

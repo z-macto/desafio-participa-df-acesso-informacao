@@ -26,6 +26,8 @@ class Testes:
 
         for nome_arquivo in os.listdir(self.pasta):
             caminho = os.path.join(self.pasta, nome_arquivo)
+            print(">>> ",caminho)
+
             if os.path.isfile(caminho) and nome_arquivo.endswith(".csv"):
                 with open(caminho, "r", encoding="utf-8") as f:
                     leitor = csv.DictReader(f, delimiter="\t")

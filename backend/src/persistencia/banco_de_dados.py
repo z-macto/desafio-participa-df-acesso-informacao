@@ -1,6 +1,6 @@
 import sqlite3
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 import math
 
 from src.backend.motor.texto import obter_pasta
@@ -85,6 +85,33 @@ class BancoDados:
                 "solicitacao": r[3],
                 "analise": r[4],
             }
+            for r in registros
+        ]
+        return resultado
+
+
+    def contar_solicitacoes_por_dia(self, dias=30):
+        """Retorna a quantidade de solicitações por dia nos últimos `dias`."""
+        conn = self._conectar()
+        cursor = conn.cursor()
+
+        # Data limite (30 dias atrás)
+        limite = (datetime.now() - timedelta(days=dias)).strftime("%Y-%m-%d")
+
+        cursor.execute("""
+                       SELECT data, COUNT(*) as total
+                       FROM solicitacoes
+                       WHERE data >= ?
+                       GROUP BY data
+                       ORDER BY data ASC
+                       """, (limite,))
+
+        registros = cursor.fetchall()
+        conn.close()
+
+        # transforma em lista de dicts
+        resultado = [
+            {"data": r[0], "total": r[1]}
             for r in registros
         ]
         return resultado

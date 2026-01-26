@@ -45,7 +45,7 @@ def solicitar_analise():
         "resposta": resposta,
     })
 
-    print(resposta_json.get_json())
+    #print(resposta_json.get_json())
 
     db = BancoDados()
     id_solicitacao = db.inserir_solicitacao(texto,json.dumps(resposta_json.get_json(), ensure_ascii=False))
@@ -63,6 +63,18 @@ def realizar_testes():
         "resposta": objeto_resposta,
     })
 
-    print(resposta_json.get_json())
+    #print(resposta_json.get_json())
 
+    return resposta_json, 200
+
+@api_bp.route("/api/estatisticas_30dias", methods=["GET"])
+def estatisticas_30dias():
+    db = BancoDados()
+    dados = db.contar_solicitacoes_por_dia(dias=30)
+
+    resposta_json = jsonify({
+        "resposta": dados
+    })
+
+    print(resposta_json.get_json())
     return resposta_json, 200

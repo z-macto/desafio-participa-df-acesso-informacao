@@ -1,36 +1,80 @@
 import json
+import re
 
-from .juridico import MotorJuridico
 from .nominal import detectar_substantivo_solicitacao
-from .solicitacoes import Solicitacoes
 from .texto import carregar_lista, remover_acentos, tokenizar_linha
 
-from .texto import obter_pasta
-
+from .configuracoes_motor import ConfiguracoesMotor
 
 class Motor:
-    def __init__(self,
-                 arquivo_termos_sensiveis: str = obter_pasta("dados/parametros/termos_sensiveis.txt"),
-                 arquivo_expressoes_juridicas_fixas: str = obter_pasta("dados/parametros/expressoes_juridicas_fixas.txt"),
-                 arquivo_substantivos_solicitacao: str = obter_pasta("dados/parametros/substantivos_solicitacao.txt")):
 
-        # Instância do motor jurídico
-        self.juridico = MotorJuridico()
+    def __init__(self):
+        self.config = ConfiguracoesMotor()
 
-        # Carregamento de listas externas
-        self.termos_sensiveis = carregar_lista(arquivo_termos_sensiveis)
-        self.palavras_solicitacao = Solicitacoes().carregar()
-        self.substantivos_solicitacao = carregar_lista(arquivo_substantivos_solicitacao)
-        self.expressoes_juridicas_fixas = carregar_lista(arquivo_expressoes_juridicas_fixas)
 
-        # Expressões jurídicas com verbos conjugáveis
-        self.expressoes_juridicas_conjugaveis = self.juridico.obter_expressoes_juridicas()
-
-        # Lista completa de expressões jurídicas
-        self.expressoes_juridicas = self.juridico.gerar_expressoes_juridicas()
 
     def analisar(self, texto: str) -> dict:
         texto = texto.strip()
+
+        REGEX_CPF = r"\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b"
+        REGEX_RG = r"\b\d{1,2}\.?\d{3}\.?\d{3}-?\d{1}\b"
+        REGEX_PROCESSO_SEI = r"\b\d{5}-\d{8}/\d{4}-\d{2}\b"
+        REGEX_TELEFONE = r"\(?\d{2}\)?\s?\d{4,5}-?\d{4}\b"
+        REGEX_EMAIL = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b"
+
+        encontrados_processo_sei = set()
+        encontrados_cpf = set()
+        encontrados_rg = set()
+        encontrados_telefone = set()
+        encontrados_email = set()
+
+        linhas_simples = texto.split('\n')
+
+        for linha in linhas_simples:
+            linha_cpf = set(re.findall(REGEX_CPF, linha))
+            linha_rg = set(re.findall(REGEX_RG, linha))
+            linha_processo_sei = set(re.findall(REGEX_PROCESSO_SEI, linha))
+            linha_telefone = set(re.findall(REGEX_TELEFONE, linha))
+            linha_email = set(re.findall(REGEX_EMAIL, linha))
+
+            for item in linha_cpf:
+                encontrados_cpf.add(item)
+
+            for item in linha_rg:
+                encontrados_rg.add(item)
+
+            for item in linha_processo_sei:
+                encontrados_processo_sei.add(item)
+
+            for item in linha_telefone:
+                encontrados_telefone.add(item)
+
+            for item in linha_email:
+                encontrados_email.add(item)
+
+        #print("--------------------- DOCUMENTOS ---------------------")
+        documentos = set()
+
+        documentos = {
+            "CPF": list(encontrados_cpf),
+            "RG": list(encontrados_rg),
+            "PROCESSO_SEI": list(encontrados_processo_sei),
+            "TELEFONE": list(encontrados_telefone),
+            "E-MAIL": list(encontrados_email)
+        }
+
+
+
+        indice_rastreabilidade = 0
+
+        indice_rastreabilidade+=len(encontrados_cpf)
+        indice_rastreabilidade+=len(encontrados_rg)
+        indice_rastreabilidade+=len(encontrados_processo_sei)
+        indice_rastreabilidade+=len(encontrados_telefone)
+        indice_rastreabilidade+=len(encontrados_email)
+
+       # print(documentos)
+
         linhas = texto.split(".")
         linhas = [linha.strip() for linha in linhas if linha.strip()]
         resultado_linhas = []
@@ -56,21 +100,21 @@ class Motor:
             tem_contexto_juridico = False
 
             # Detecta verbos de solicitação
-            for p in self.palavras_solicitacao:
+            for p in self.config.palavras_solicitacao:
                 if p in tokens:
                     verbos_solicitacao_encontrados.append(p)
                     tem_solicitacao = True
 
             # Detecta substantivo de solicitação
             substantivo_solicitacao = detectar_substantivo_solicitacao(
-                self.substantivos_solicitacao, linha_normalizada
+                self.config.substantivos_solicitacao, linha_normalizada
             )
             if substantivo_solicitacao:
                 verbos_solicitacao_encontrados.append(substantivo_solicitacao)
                 tem_solicitacao = True
 
             # Detecta contexto jurídico
-            expressao_juridica = self.juridico.detectar_contexto_juridico(linha_normalizada)
+            expressao_juridica = self.config.juridico.detectar_contexto_juridico(linha_normalizada)
             if expressao_juridica:
                 tem_contexto_juridico = True
 
@@ -78,7 +122,7 @@ class Motor:
             termos_sensiveis_encontrados = []
             tem_termo_sensivel = False
 
-            for termo in self.termos_sensiveis:
+            for termo in self.config.termos_sensiveis:
                 termo_tokens = termo.split()  # quebra o termo em palavras
                 tamanho = len(termo_tokens)
 
@@ -151,9 +195,9 @@ class Motor:
         questionamento = questionamento_solicitacao_linhas / questionamento_total_linhas
         pessoalidade = criticidade_termos_sensiveis / questionamento_total_linhas
 
-        print("Linhas Pessoal = ",criticidade_linhas_pessoal)
-        print("Verbos Soliciticao = ",criticidade_verbos_solicitacao)
-        print("Termos Sensiveis = ",criticidade_termos_sensiveis)
+      #  print("Linhas Pessoal = ",criticidade_linhas_pessoal)
+       # print("Verbos Soliciticao = ",criticidade_verbos_solicitacao)
+        #print("Termos Sensiveis = ",criticidade_termos_sensiveis)
 
         impessoalidade = 1 - pessoalidade
 
@@ -166,18 +210,21 @@ class Motor:
         indice_final = round(indice_final, 2)
 
         resultado = {
+            "Mensagem":texto,
             "Indice": indice_final,
             "Criticidade": criticidade,
             "Questionamento": questionamento,
             "Pessoalidade": pessoalidade,
             "Impessoalidade": impessoalidade,
+            "Rastreabilidade":indice_rastreabilidade,
             "Validacao": validacao,
             "Retorno": texto,
             "Status": status,
             "Linhas": resultado_linhas,
+            "Documentos":documentos,
             "Motivo": motivo,
             "Motivo_bloqueou": motivo_bloqueou
         }
 
-        print(resultado)
+       # print(resultado)
         return resultado
