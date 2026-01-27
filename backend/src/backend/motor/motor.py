@@ -7,6 +7,7 @@ from .texto import carregar_lista, remover_acentos, tokenizar_linha
 from .configuracoes_motor import ConfiguracoesMotor
 from ..validadores.cnh import cnh_validar
 from ..validadores.cpf import cpf_validar
+from ..validadores.sus import sus_validar
 
 
 class Motor:
@@ -23,6 +24,7 @@ class Motor:
         REGEX_RG = r"\b\d{1,2}\.?\d{3}\.?\d{3}-?\d{1}\b"
         REGEX_CNH = r"\b\d{11}\b"
         REGEX_OAB = r"\b\d{4,6}[-/ ]?[A-Z]{2}\b"
+        REGEX_SUS = r"\b\d{15}\b"
         REGEX_PROCESSO_SEI = r"\b\d{5}-\d{8}/\d{4}-\d{2}\b"
         REGEX_TELEFONE = r"\(?\d{2}\)?\s?\d{4,5}-?\d{4}\b"
         REGEX_EMAIL = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b"
@@ -31,6 +33,7 @@ class Motor:
         encontrados_cpf = set()
         encontrados_rg = set()
         encontrados_cnh = set()
+        encontrados_sus = set()
         encontrados_oab = set()
         encontrados_telefone = set()
         encontrados_email = set()
@@ -42,6 +45,7 @@ class Motor:
             linha_rg = set(re.findall(REGEX_RG, linha))
             linha_cnh = set(re.findall(REGEX_CNH, linha))
             linha_oab = set(re.findall(REGEX_OAB, linha))
+            linha_sus = set(re.findall(REGEX_SUS, linha))
 
             linha_processo_sei = set(re.findall(REGEX_PROCESSO_SEI, linha))
             linha_telefone = set(re.findall(REGEX_TELEFONE, linha))
@@ -57,6 +61,10 @@ class Motor:
             for item in linha_cnh:
                 if(cnh_validar(item)):
                     encontrados_cnh.add(item)
+
+            for item in linha_sus:
+                if(sus_validar(item)):
+                    encontrados_sus.add(item)
 
             for item in linha_oab:
                 encontrados_oab.add(item)
@@ -77,6 +85,7 @@ class Motor:
             "CPF": list(encontrados_cpf),
             "RG": list(encontrados_rg),
             "CHN": list(encontrados_cnh),
+            "SUS": list(encontrados_sus),
             "OAB": list(encontrados_oab),
             "PROCESSO_SEI": list(encontrados_processo_sei),
             "TELEFONE": list(encontrados_telefone),
