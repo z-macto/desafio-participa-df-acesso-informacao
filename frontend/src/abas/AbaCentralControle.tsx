@@ -8,6 +8,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import API from "../API";
 
 interface Solicitacao {
   id: string;
@@ -32,9 +33,12 @@ function CentralControle() {
 
   // Carregar info inicial (total de páginas e estatísticas)
   useEffect(() => {
+    const api = new API();
+
     const fetchInfo = async () => {
       try {
-        const response = await fetch("/api/solicitacoes/info");
+        const apiUrl = await api.getApiUrl(); // pega a URL do config.json
+        const response = await fetch(`${apiUrl}/api/solicitacoes/info`);
         if (response.ok) {
           const data = await response.json();
           setTotalPaginas(data.total_paginas);

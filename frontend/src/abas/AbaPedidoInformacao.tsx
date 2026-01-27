@@ -1,13 +1,16 @@
-import  { useState } from "react";
+import { useState } from "react";
 import RespostaWidget from "../componentes/RespostaWidget";
+import API from "../API";
 
 function AbaPedidoInformacao() {
   const [texto, setTexto] = useState("");
   const [resposta, setResposta] = useState<any>(null);
 
+  const api = new API();
   const handleSolicitar = async () => {
     try {
-      const response = await fetch("/api/solicitar_analise", {
+      const apiUrl = await api.getApiUrl(); // pega a URL do config.json
+      const response = await fetch(`${apiUrl}/api/solicitar_analise`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ solicitacao: texto }),
@@ -17,7 +20,10 @@ function AbaPedidoInformacao() {
         setResposta(data.resposta);
         setTexto("");
       } else {
-        setResposta({ Status: "Erro", Validacao: "Erro ao enviar solicitação" });
+        setResposta({
+          Status: "Erro",
+          Validacao: "Erro ao enviar solicitação",
+        });
       }
     } catch (error) {
       console.error(error);
@@ -28,7 +34,7 @@ function AbaPedidoInformacao() {
   return (
     <div className="flex flex-col items-start gap-6">
       {/* Caixa de texto */}
-      <div className="w-full max-w-3xl mt-6 mx-auto sem_cursor" >
+      <div className="w-full max-w-3xl mt-6 mx-auto sem_cursor">
         <textarea
           rows={6}
           placeholder="Digite aqui sua solicitação..."

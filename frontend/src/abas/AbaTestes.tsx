@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import RespostaWidget from "../componentes/RespostaWidget";
+import API from "../API";
 
 function Modal({ aberto, onClose, children }: any) {
   if (!aberto) return null;
@@ -34,9 +35,13 @@ function Testes() {
   const [itemSelecionado, setItemSelecionado] = useState<any>(null);
 
   useEffect(() => {
+    const api = new API();
+
     const fetchDados = async () => {
       try {
-        const response = await fetch("/api/testes");
+        const apiUrl = await api.getApiUrl(); // pega a URL do config.json
+
+        const response = await fetch(`${apiUrl}/api/testes`);
         if (response.ok) {
           const data = await response.json();
           setDados(data.resposta);
