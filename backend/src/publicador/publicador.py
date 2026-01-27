@@ -23,6 +23,9 @@ def gerar_lista_datas_inteiros():
 
     return lista
 
+def zerar():
+    db.remover_solicitacoes_antigas()
+
 
 def publique():
     # Exemplo de uso
@@ -41,6 +44,14 @@ def publique():
 
         (data,quantidade) = item
 
+
+        try:
+            data_local = datetime.strptime(data, "%d/%m/%Y")
+            data= data_local.strftime("%Y-%m-%d")
+        except ValueError:
+            raise ValueError(f"Data inválida: {data}")
+
+
         print("Data :: ",data)
         print(quantidade)
 
@@ -55,7 +66,12 @@ def publique():
                 "resposta": resposta,
             })
 
-            id_solicitacao = db.inserir_solicitacao(texto,json.dumps(resposta_json.get_json(), ensure_ascii=False))
+            hora = random.randint(10, 20)
+            minuto = random.randint(0, 59)
+            segundo = random.randint(0, 59)
+
+            horario = f"{hora:02d}:{minuto:02d}:{segundo:02d}"
+            id_solicitacao = db.inserir_solicitacao(texto,json.dumps(resposta_json.get_json(), ensure_ascii=False),data,horario)
 
 
 

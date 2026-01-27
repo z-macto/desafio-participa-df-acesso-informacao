@@ -121,7 +121,7 @@ class BancoDados:
         cursor = conn.cursor()
 
         # Define a data limite
-        data_limite = "2026-01-27"
+        data_limite = "2026-01-28"
 
         # Remove registros anteriores à data limite
         cursor.execute("""
@@ -131,3 +131,30 @@ class BancoDados:
 
         conn.commit()
         conn.close()
+
+    def inserir_solicitacao(self, conteudo: str, resposta: str, data: str, horario: str):
+        """
+        Insere uma solicitação no banco de dados.
+
+        Parâmetros:
+            conteudo (str): Texto da solicitação
+            resposta (str): Texto da análise/resposta
+            data (str): Data no formato 'YYYY-MM-DD'
+            horario (str): Horário no formato 'HH:MM:SS'
+        """
+        conn = self._conectar()
+        cursor = conn.cursor()
+
+        try:
+            id = uuid.uuid7().hex  # Python 3.11+
+        except AttributeError:
+            id = uuid.uuid4().hex  # fallback
+
+        cursor.execute("""
+                       INSERT INTO solicitacoes (id, data, horario, solicitacao, analise)
+                       VALUES (?, ?, ?, ?, ?)
+                       """, (id, data, horario, conteudo, resposta))
+
+        conn.commit()
+        conn.close()
+        return id

@@ -4,10 +4,7 @@ from flask import Flask, send_from_directory
 
 from src.api import api_bp
 from src.backend.rotas.teste_routes import teste_bp
-from src.publicador.publicador import publique
-
-
-
+from src.publicador.publicador import publique, zerar
 
 app = Flask(__name__, static_folder="../distribuicao", static_url_path="")
 app.secret_key = "{DESAFIO-PARTICIPA-DF-ACESSO-INFORMACAO}"
@@ -19,6 +16,8 @@ app.register_blueprint(api_bp)
 
 @app.route("/")
 def index():
+    #publique()
+    #zerar()
     return send_from_directory(app.static_folder, "index.html")
 
 if __name__ == "__main__":
