@@ -29,7 +29,7 @@ class BancoDados:
         conn.commit()
         conn.close()
 
-    def inserir_solicitacao(self, conteudo: str, resposta: str):
+    def inserir_solicitacao_diretamente(self, conteudo: str, resposta: str):
         conn = self._conectar()
         cursor = conn.cursor()
 
