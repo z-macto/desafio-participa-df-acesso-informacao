@@ -1,8 +1,37 @@
 import { useEffect, useState } from "react";
+import RespostaWidget from "../componentes/RespostaWidget";
+
+function Modal({ aberto, onClose, children }: any) {
+  if (!aberto) return null;
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div
+        className="bg-white p-6 rounded-md shadow-lg relative"
+        style={{
+          width: "800px", // largura fixa
+          height: "500px", // altura fixa
+          maxWidth: "90%", // responsivo
+          maxHeight: "90%", // responsivo
+          overflowY: "auto", // scroll se passar da altura
+        }}
+      >
+        <button
+          className="absolute top-2 right-2 text-gray-600 hover:text-black"
+          onClick={onClose}
+        >
+          ✕
+        </button>
+        {children}
+      </div>
+    </div>
+  );
+}
 
 function Testes() {
   const [dados, setDados] = useState<any>(null);
   const [erro, setErro] = useState<string | null>(null);
+  const [modalAberto, setModalAberto] = useState(false);
+  const [itemSelecionado, setItemSelecionado] = useState<any>(null);
 
   useEffect(() => {
     const fetchDados = async () => {
@@ -11,7 +40,6 @@ function Testes() {
         if (response.ok) {
           const data = await response.json();
           setDados(data.resposta);
-          console.log(data.resposta);
         } else {
           setErro("Erro ao carregar dados de /api/testes");
         }
@@ -63,7 +91,14 @@ function Testes() {
                   : "bg-red-200 text-red-800";
 
               return (
-                <tr key={idx} className={` hover:opacity-80`}>
+                <tr
+                  key={idx}
+                  className="hover:opacity-80 cursor-pointer"
+                  onClick={() => {
+                    setItemSelecionado(res);
+                    setModalAberto(true);
+                  }}
+                >
                   <td className="px-4 py-2 border-b">{res.Retorno}</td>
                   <td className="px-4 py-2 border-b">{res.Validacao}</td>
                   <td className="px-4 py-2 border-b">{res.Indice}</td>
@@ -81,6 +116,24 @@ function Testes() {
           </tbody>
         </table>
       </div>
+
+      {/* Modal com mensagem + RespostaWidget */}
+      <Modal aberto={modalAberto} onClose={() => setModalAberto(false)}>
+        {itemSelecionado && (
+          <div className="space-y-4">
+            {/* Mensagem do teste */}
+            <div className="p-4 bg-gray-50 border rounded-md shadow-sm">
+              <h3 className="text-lg font-bold mb-2 text-center">
+                Mensagem do Teste
+              </h3>
+              <p className="text-black">{itemSelecionado.Mensagem}</p>
+            </div>
+
+            {/* Widget de resposta detalhada */}
+            <RespostaWidget resposta={itemSelecionado} />
+          </div>
+        )}
+      </Modal>
     </div>
   );
 }

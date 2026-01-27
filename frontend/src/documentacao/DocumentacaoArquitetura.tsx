@@ -22,9 +22,9 @@ function DocumentacaoArquitetura() {
     },
     {
       icon: ServerStackIcon,
-      titulo: "Backend em Python + FastAPI",
+      titulo: "Backend em Python + Flask",
       descricao:
-        "Camada lógica e de processamento construída com FastAPI, oferecendo alta performance e validação automática.",
+        "Camada lógica e de processamento construída com Flask, oferecendo alta performance e validação automática.",
     },
     {
       icon: GlobeAltIcon,

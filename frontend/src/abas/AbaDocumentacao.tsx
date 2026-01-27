@@ -1,9 +1,10 @@
 import { useState } from "react";
 import {
   HomeIcon,
+  BookOpenIcon,
   CubeTransparentIcon,
   CogIcon,
-  PlayIcon,
+  //PlayIcon,
   DocumentTextIcon,
   BeakerIcon,
   ShieldCheckIcon,
@@ -12,6 +13,7 @@ import {
 
 // Importando os componentes com prefixo Documentacao
 import DocumentacaoVisaoGeral from "../documentacao/DocumentacaoVisaoGeral";
+import DocumentacaoGuiaAnalisar from "../documentacao/DocumentacaoGuiaAnalisar";
 import DocumentacaoArquitetura from "../documentacao/DocumentacaoArquitetura";
 import DocumentacaoInstalacao from "../documentacao/DocumentacaoInstalacao";
 import DocumentacaoExecucao from "../documentacao/DocumentacaoExecucao";
@@ -22,9 +24,9 @@ import DocumentacaoApi from "../documentacao/DocumentacaoApi";
 
 const abas = [
   { id: "visao", label: "Visão Geral", icon: HomeIcon },
+  { id: "guia de uso", label: "Guia de uso", icon: BookOpenIcon },
   { id: "arquitetura", label: "Arquitetura", icon: CubeTransparentIcon },
   { id: "instalacao", label: "Instalação", icon: CogIcon },
-  { id: "execucao", label: "Execução", icon: PlayIcon },
   { id: "formatos", label: "Formatos", icon: DocumentTextIcon },
   { id: "metodologia", label: "Metodologia", icon: BeakerIcon },
   { id: "seguranca", label: "Segurança", icon: ShieldCheckIcon },
@@ -62,6 +64,7 @@ function Documentacao() {
       {/* Conteúdo da aba */}
       <div className="mt-6 text-left max-w-3xl mx-auto">
         {abaAtiva === "visao" && <DocumentacaoVisaoGeral />}
+        {abaAtiva === "guia de uso" && <DocumentacaoGuiaAnalisar />}
         {abaAtiva === "arquitetura" && <DocumentacaoArquitetura />}
         {abaAtiva === "instalacao" && <DocumentacaoInstalacao />}
         {abaAtiva === "execucao" && <DocumentacaoExecucao />}
