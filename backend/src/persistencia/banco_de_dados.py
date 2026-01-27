@@ -115,3 +115,19 @@ class BancoDados:
             for r in registros
         ]
         return resultado
+
+    def remover_solicitacoes_antigas(self):
+        conn = self._conectar()
+        cursor = conn.cursor()
+
+        # Define a data limite
+        data_limite = "2026-01-27"
+
+        # Remove registros anteriores à data limite
+        cursor.execute("""
+            DELETE FROM solicitacoes
+            WHERE data < ?
+        """, (data_limite,))
+
+        conn.commit()
+        conn.close()
