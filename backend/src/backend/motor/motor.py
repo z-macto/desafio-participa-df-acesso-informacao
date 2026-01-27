@@ -5,6 +5,9 @@ from .nominal import detectar_substantivo_solicitacao
 from .texto import carregar_lista, remover_acentos, tokenizar_linha
 
 from .configuracoes_motor import ConfiguracoesMotor
+from ..validadores.cnh import cnh_validar
+from ..validadores.cpf import cpf_validar
+
 
 class Motor:
 
@@ -18,6 +21,8 @@ class Motor:
 
         REGEX_CPF = r"\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b"
         REGEX_RG = r"\b\d{1,2}\.?\d{3}\.?\d{3}-?\d{1}\b"
+        REGEX_CNH = r"\b\d{11}\b"
+        REGEX_OAB = r"\b\d{4,6}[-/ ]?[A-Z]{2}\b"
         REGEX_PROCESSO_SEI = r"\b\d{5}-\d{8}/\d{4}-\d{2}\b"
         REGEX_TELEFONE = r"\(?\d{2}\)?\s?\d{4,5}-?\d{4}\b"
         REGEX_EMAIL = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b"
@@ -25,6 +30,8 @@ class Motor:
         encontrados_processo_sei = set()
         encontrados_cpf = set()
         encontrados_rg = set()
+        encontrados_cnh = set()
+        encontrados_oab = set()
         encontrados_telefone = set()
         encontrados_email = set()
 
@@ -33,15 +40,26 @@ class Motor:
         for linha in linhas_simples:
             linha_cpf = set(re.findall(REGEX_CPF, linha))
             linha_rg = set(re.findall(REGEX_RG, linha))
+            linha_cnh = set(re.findall(REGEX_CNH, linha))
+            linha_oab = set(re.findall(REGEX_OAB, linha))
+
             linha_processo_sei = set(re.findall(REGEX_PROCESSO_SEI, linha))
             linha_telefone = set(re.findall(REGEX_TELEFONE, linha))
             linha_email = set(re.findall(REGEX_EMAIL, linha))
 
             for item in linha_cpf:
-                encontrados_cpf.add(item)
+                if(cpf_validar(item)):
+                    encontrados_cpf.add(item)
 
             for item in linha_rg:
                 encontrados_rg.add(item)
+
+            for item in linha_cnh:
+                if(cnh_validar(item)):
+                    encontrados_cnh.add(item)
+
+            for item in linha_oab:
+                encontrados_oab.add(item)
 
             for item in linha_processo_sei:
                 encontrados_processo_sei.add(item)
@@ -58,6 +76,8 @@ class Motor:
         documentos = {
             "CPF": list(encontrados_cpf),
             "RG": list(encontrados_rg),
+            "CHN": list(encontrados_cnh),
+            "OAB": list(encontrados_oab),
             "PROCESSO_SEI": list(encontrados_processo_sei),
             "TELEFONE": list(encontrados_telefone),
             "E-MAIL": list(encontrados_email)
