@@ -35,22 +35,282 @@ O backend opera como um pipeline de processamento de texto estruturado:
 `POST /api/solicitar_analise`
 
 **Payload:**
-```json
-{
-  "texto": "Solicito acesso ao CPF do servidor X."
-}
-
+```text
+Venho solicitar junto a Caesb o histórico de consumo da inscrição:157028-1, 
+sob o CPF: 129.180.122-6, Júlio Cesar Alves da Rosa, no período de 12/2002 a
+01/2007. E o histórico de consumo da Inscrição: 00569848-9, sob o 
+CPF: 210.201.140-24, Maria Martins Mota Silva. Tal solicitação se deve, 
+a fim de fazer o comparativo de consumo destes imóveis no período em que 
+residi com minha família. Preciso solicitar justificativas para um consumo 
+atual muito alto para as características do imóvel, quantidade de pessoas. 
+No primeiro imóvel residiam 10 pessoas o terreno de 2.000 metros quadrados ,
+tinha pomar, grama, piscina (10X6), sauna, instalações antigas com 
+15 banheiros. Atualmente a casa tem 800 metros quadrados, somente 02 adultos
+e 04 criança. Pequeno jardim e a casa tem a estrutura toda nova. 
+Foram feitos várias solicitações junto à Caesb e a empresa de caça-vazamentos 
+para que pudéssemos identificar vazamentos e demais anormalidades que causassem 
+esse consumo absurdo. juntamente com os históricos de consumo citados, desejo 
+receber também as cartas respostas referentes a todas minha solicitações.
 ```
 
 **Resposta:**
-
 ```json
 {
-  "Status": "NAO",
-  "Validacao": "Esse pedido solicita acesso a informacoes pessoais.",
-  "Motivo": "Solicitação detectada (\"solicito\") com termo inválido (\"cpf\")"
+   "resposta":{
+      "Criticidade":4,
+      "Documentos":{
+         "CHN":[
+            
+         ],
+         "CPF":[
+            
+         ],
+         "E-MAIL":[
+            
+         ],
+         "OAB":[
+            
+         ],
+         "PROCESSO_SEI":[
+            
+         ],
+         "RG":[
+            "00569848-9"
+         ],
+         "SUS":[
+            
+         ],
+         "TELEFONE":[
+            
+         ]
+      },
+      "Impessoalidade":0.86,
+      "Indice":6.86,
+      "Linhas":[
+         {
+            "contexto_juridico":false,
+            "linha":"Venho solicitar junto a Caesb o histórico de consumo da inscrição:157028-1, sob o CPF: 129",
+            "motivo":"Solicitação detectada com termos sensiveis: cpf",
+            "solicitacao":[
+               "solicitar"
+            ],
+            "status":"NAO",
+            "tem_solicitacao":true,
+            "tem_termo_sensivel":true,
+            "termos_sensiveis":[
+               "cpf"
+            ]
+         },
+         {
+            "contexto_juridico":false,
+            "linha":"180",
+            "motivo":"None",
+            "solicitacao":[
+               
+            ],
+            "status":"SIM",
+            "tem_solicitacao":false,
+            "tem_termo_sensivel":false,
+            "termos_sensiveis":[
+               
+            ]
+         },
+         {
+            "contexto_juridico":false,
+            "linha":"122-6, Júlio Cesar Alves da Rosa, no período de 12/2002 a 01/2007",
+            "motivo":"None",
+            "solicitacao":[
+               
+            ],
+            "status":"SIM",
+            "tem_solicitacao":false,
+            "tem_termo_sensivel":false,
+            "termos_sensiveis":[
+               
+            ]
+         },
+         {
+            "contexto_juridico":false,
+            "linha":"E o histórico de consumo da Inscrição: 00569848-9, sob o CPF: 210",
+            "motivo":"None",
+            "solicitacao":[
+               
+            ],
+            "status":"SIM",
+            "tem_solicitacao":false,
+            "tem_termo_sensivel":true,
+            "termos_sensiveis":[
+               "cpf"
+            ]
+         },
+         {
+            "contexto_juridico":false,
+            "linha":"201",
+            "motivo":"None",
+            "solicitacao":[
+               
+            ],
+            "status":"SIM",
+            "tem_solicitacao":false,
+            "tem_termo_sensivel":false,
+            "termos_sensiveis":[
+               
+            ]
+         },
+         {
+            "contexto_juridico":false,
+            "linha":"140-24, Maria Martins Mota Silva",
+            "motivo":"None",
+            "solicitacao":[
+               
+            ],
+            "status":"SIM",
+            "tem_solicitacao":false,
+            "tem_termo_sensivel":false,
+            "termos_sensiveis":[
+               
+            ]
+         },
+         {
+            "contexto_juridico":false,
+            "linha":"Tal solicitação se deve, a fim de fazer o comparativo de consumo destes imóveis no período em que residi com minha família",
+            "motivo":"None",
+            "solicitacao":[
+               "solicitacao"
+            ],
+            "status":"SIM",
+            "tem_solicitacao":true,
+            "tem_termo_sensivel":false,
+            "termos_sensiveis":[
+               
+            ]
+         },
+         {
+            "contexto_juridico":false,
+            "linha":"Preciso solicitar justificativas para um consumo atual muito alto para as características do imóvel, quantidade de pessoas",
+            "motivo":"None",
+            "solicitacao":[
+               "solicitar",
+               "preciso",
+               "preciso"
+            ],
+            "status":"SIM",
+            "tem_solicitacao":true,
+            "tem_termo_sensivel":false,
+            "termos_sensiveis":[
+               
+            ]
+         },
+         {
+            "contexto_juridico":false,
+            "linha":"No primeiro imóvel residiam 10 pessoas o terreno de 2",
+            "motivo":"None",
+            "solicitacao":[
+               
+            ],
+            "status":"SIM",
+            "tem_solicitacao":false,
+            "tem_termo_sensivel":false,
+            "termos_sensiveis":[
+               
+            ]
+         },
+         {
+            "contexto_juridico":false,
+            "linha":"000 metros quadrados , tinha pomar, grama, piscina (10X6), sauna, instalações antigas com 15 banheiros",
+            "motivo":"None",
+            "solicitacao":[
+               
+            ],
+            "status":"SIM",
+            "tem_solicitacao":false,
+            "tem_termo_sensivel":false,
+            "termos_sensiveis":[
+               
+            ]
+         },
+         {
+            "contexto_juridico":false,
+            "linha":"Atualmente a casa tem 800 metros quadrados, somente 02 adultos e 04 criança",
+            "motivo":"None",
+            "solicitacao":[
+               "tem",
+               "tem"
+            ],
+            "status":"SIM",
+            "tem_solicitacao":true,
+            "tem_termo_sensivel":false,
+            "termos_sensiveis":[
+               
+            ]
+         },
+         {
+            "contexto_juridico":false,
+            "linha":"Pequeno jardim e a casa tem a estrutura toda nova",
+            "motivo":"None",
+            "solicitacao":[
+               "tem",
+               "tem",
+               "que"
+            ],
+            "status":"SIM",
+            "tem_solicitacao":true,
+            "tem_termo_sensivel":false,
+            "termos_sensiveis":[
+               
+            ]
+         },
+         {
+            "contexto_juridico":false,
+            "linha":"Foram feitos várias solicitações junto à Caesb e a empresa de caça-vazamentos para que pudéssemos identificar vazamentos e demais anormalidades que causassem esse consumo absurdo",
+            "motivo":"None",
+            "solicitacao":[
+               "que"
+            ],
+            "status":"SIM",
+            "tem_solicitacao":true,
+            "tem_termo_sensivel":false,
+            "termos_sensiveis":[
+               
+            ]
+         },
+         {
+            "contexto_juridico":false,
+            "linha":"juntamente com os históricos de consumo citados, desejo receber também as cartas respostas referentes a todas minha solicitações",
+            "motivo":"None",
+            "solicitacao":[
+               "desejo",
+               "receber"
+            ],
+            "status":"SIM",
+            "tem_solicitacao":true,
+            "tem_termo_sensivel":false,
+            "termos_sensiveis":[
+               
+            ]
+         }
+      ],
+      "Mensagem":"Venho solicitar junto a Caesb o histórico de consumo da inscrição:157028-1, sob o CPF: 129.180.122-6, Júlio Cesar Alves da Rosa, no período de 12/2002 a 01/2007. E o histórico de consumo da Inscrição: 00569848-9, sob o CPF: 210.201.140-24, Maria Martins Mota Silva. Tal solicitação se deve, a fim de fazer o comparativo de consumo destes imóveis no período em que residi com minha família. Preciso solicitar justificativas para um consumo atual muito alto para as características do imóvel, quantidade de pessoas. No primeiro imóvel residiam 10 pessoas o terreno de 2.000 metros quadrados , tinha pomar, grama, piscina (10X6), sauna, instalações antigas com 15 banheiros. Atualmente a casa tem 800 metros quadrados, somente 02 adultos e 04 criança. Pequeno jardim e a casa tem a estrutura toda nova. Foram feitos várias solicitações junto à Caesb e a empresa de caça-vazamentos para que pudéssemos identificar vazamentos e demais anormalidades que causassem esse consumo absurdo. juntamente com os históricos de consumo citados, desejo receber também as cartas respostas referentes a todas minha solicitações.",
+      "Motivo":"Solicitação detectada com termos sensiveis: cpf",
+      "Motivo_bloqueou":[
+         {
+            "expressao":[
+               "solicitar"
+            ],
+            "posicao":6,
+            "termo_invalido":[
+               "cpf"
+            ]
+         }
+      ],
+      "Pessoalidade":0.14,
+      "Questionamento":0.5,
+      "Rastreabilidade":1,
+      "Retorno":"Venho solicitar junto a Caesb o histórico de consumo da inscrição:157028-1, sob o CPF: 129.180.122-6, Júlio Cesar Alves da Rosa, no período de 12/2002 a 01/2007. E o histórico de consumo da Inscrição: 00569848-9, sob o CPF: 210.201.140-24, Maria Martins Mota Silva. Tal solicitação se deve, a fim de fazer o comparativo de consumo destes imóveis no período em que residi com minha família. Preciso solicitar justificativas para um consumo atual muito alto para as características do imóvel, quantidade de pessoas. No primeiro imóvel residiam 10 pessoas o terreno de 2.000 metros quadrados , tinha pomar, grama, piscina (10X6), sauna, instalações antigas com 15 banheiros. Atualmente a casa tem 800 metros quadrados, somente 02 adultos e 04 criança. Pequeno jardim e a casa tem a estrutura toda nova. Foram feitos várias solicitações junto à Caesb e a empresa de caça-vazamentos para que pudéssemos identificar vazamentos e demais anormalidades que causassem esse consumo absurdo. juntamente com os históricos de consumo citados, desejo receber também as cartas respostas referentes a todas minha solicitações.",
+      "Status":"NAO",
+      "Validacao":"Esse pedido solicita acesso a informacoes pessoais."
+   }
 }
-
 ```
 
 ### 2. Gestão de Dados (SQLite)

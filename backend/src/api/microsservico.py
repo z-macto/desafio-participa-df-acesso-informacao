@@ -45,7 +45,7 @@ def solicitar_analise():
         "resposta": resposta,
     })
 
-    #print(resposta_json.get_json())
+    print(resposta_json.get_json())
 
     db = BancoDados()
     id_solicitacao = db.inserir_solicitacao_diretamente(texto,json.dumps(resposta_json.get_json(), ensure_ascii=False))
