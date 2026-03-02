@@ -1,4 +1,3 @@
-
 # 📖 Projeto: Desafio Participa DF – Acesso à Informação
 
 ## 📌 Descrição
@@ -60,15 +59,15 @@ http://localhost:5000
 
 ## 📂 Rotas disponíveis
 
-| Rota                        | Método | Descrição                                                                 |
-| --------------------------- | ------ | ------------------------------------------------------------------------- |
-| `/`                         | GET    | Página principal para análise de solicitações                             |
-| `/testes`                   | GET    | Página para execução de testes em massa                                   |
-| `/api/solicitar_analise`    | POST   | Recebe um texto e retorna análise completa em JSON                        |
-| `/api/testes`               | GET    | Executa testes em lote e retorna resumo                                   |
-| `/api/estatisticas_30dias`  | GET    | Retorna estatísticas de solicitações dos últimos 30 dias                  |
-| `/api/solicitacoes/info`    | GET    | Retorna total de solicitações e número de páginas                         |
-| `/api/solicitacoes`         | GET    | Lista solicitações registradas, com suporte a paginação (`?pagina=N`)     |
+| Rota                       | Método | Descrição                                                             |
+| -------------------------- | ------ | --------------------------------------------------------------------- |
+| `/`                        | GET    | Página principal para análise de solicitações                         |
+| `/testes`                  | GET    | Página para execução de testes em massa                               |
+| `/api/solicitar_analise`   | POST   | Recebe um texto e retorna análise completa em JSON                    |
+| `/api/testes`              | GET    | Executa testes em lote e retorna resumo                               |
+| `/api/estatisticas_30dias` | GET    | Retorna estatísticas de solicitações dos últimos 30 dias              |
+| `/api/solicitacoes/info`   | GET    | Retorna total de solicitações e número de páginas                     |
+| `/api/solicitacoes`        | GET    | Lista solicitações registradas, com suporte a paginação (`?pagina=N`) |
 
 ---
 
@@ -217,3 +216,18 @@ Solicito acesso ao banco de dados contendo nome, CPF, RG e endereço dos servido
   - Parâmetros jurídicos
 
 ---
+
+## 🏆 Resultado do Hackathon
+
+Confira as matérias oficiais sobre o 1º Hackathon em Controle Social:
+
+- [1º Hackathon em Controle Social: Desafio Participa DF – Controladoria-Geral do DF](https://www.cg.df.gov.br/w/1-hackathon-em-controle-social-desafio-participa-df)
+
+- [CGDF lança 1º Hackathon em Controle Social – Tribunal de Contas do DF](https://www2.tc.df.gov.br/a-controladoria-geral-do-distrito-federal-cgdf-lanca-1o-hackathon-em-controle-social/)
+
+- [Hackathon: 128 inscritos entram na disputa por soluções para modernizar o Participa DF – Ouvidoria DF](https://www.ouvidoria.df.gov.br/hackathon-128-inscritos-entram-na-disputa-por-solucoes-para-modernizar-o-participa-df/)
+
+- [🎥 Transmissão da divulgação do resultado – YouTube](https://www.youtube.com/watch?v=8gPUnartxvA)
+- [Anunciados os ganhadores do 1º Hackathon em Controle Social – Controladoria-Geral do DF](https://www.cg.df.gov.br/w/anunciados-os-ganhadores-do-1-hackathon-em-controle-social)
+
+- [📄 Resultado completo em PDF](./resultado_hackathon.pdf)
